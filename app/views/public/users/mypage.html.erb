@@ -1,0 +1,43 @@
+<h2>マイページ</h2>
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <div class="user-profile">
+    <!-- ユーザー名 -->
+    <h1><%= @user.name %></h1>
+  
+    <!-- ユーザー画像 -->
+    <div class="profile-image">
+      <% if @user.profile_image.attached? %>
+        <%= image_tag @user.profile_image, size: "150x150", alt: @user.name %>
+      <% else %>
+        <%= image_tag "no-image.jpeg", alt: "デフォルトのプロフィール画像", size: "150x150" %>
+      <% end %>
+    </div>
+  
+    <!-- ユーザー自己紹介 -->
+    <p><%= @user.introduction.presence || "自己紹介はまだありません。" %></p>
+  
+    <!-- ユーザー編集ページへのリンク -->
+    <%= link_to "プロフィールを編集", edit_user_path(@user), class: "btn btn-primary" %>
+  
+    <!-- フォロー数（リンク付き） -->
+    <div class="user-follow">
+      <p>
+        <%= link_to "#{@user.followings.count} フォロー", followings_user_path(@user), class: "btn btn-link" %>
+        <%= link_to "#{@user.followers.count} フォロワー", followers_user_path(@user), class: "btn btn-link" %>
+      </p>
+    </div>
+   </div>
+  
+  <div class="tab-menu">
+    <%= link_to "投稿一覧", mypage_path(tab: "posts"), data: { turbo_frame: "content" } %>
+    <%= link_to "いいね一覧", mypage_path(tab: "likes"), data: { turbo_frame: "content" } %>
+    <%= link_to "発行したチケット", mypage_path(tab: "issued_tickets"), data: { turbo_frame: "content" } %>
+    <%= link_to "受け取ったチケット", mypage_path(tab: "received_tickets"), data: { turbo_frame: "content" } %>
+  </div>
+  
+  <%= turbo_frame_tag "content" do %>
+    <%= render "public/users/mypage/#{params[:tab] || 'posts'}" %>
+  <% end %>
+  </div>
+</div>

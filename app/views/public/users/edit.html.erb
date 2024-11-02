@@ -1,0 +1,34 @@
+<h1>Public::Users#edit</h1>
+<p>Find me in app/views/public/users/edit.html.erb</p>
+
+<h1>プロフィールを編集</h1>
+
+<%= form_with(model: @user, local: true) do |f| %>
+  <div class="field">
+    <%= f.label :name, "ユーザー名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :introduction, "自己紹介" %>
+    <%= f.text_area :introduction %>
+  </div>
+
+  <div class="field">
+    <%= f.label :profile_image, "プロフィール画像" %>
+    <%= f.file_field :profile_image %>
+    <% if @user.profile_image.attached? %>
+      <p>現在の画像:</p>
+      <%= image_tag @user.profile_image, size: "100x100" %>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email, "メールアドレス" %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "更新する" %>
+  </div>
+<% end %>

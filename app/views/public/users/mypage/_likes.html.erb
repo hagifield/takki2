@@ -1,0 +1,12 @@
+<div class="user-likes">
+  <h2>いいね一覧</h2>
+  <% if @user.likes.any? %>
+    <ul>
+      <% @user.likes.each do |like| %>
+        <li><%= link_to like.likable.title, polymorphic_path(like.likable) %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>まだいいねした投稿はありません。</p>
+  <% end %>
+</div>

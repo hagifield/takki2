@@ -1,0 +1,12 @@
+<div class="user-issued-tickets">
+  <h2>発行したチケット一覧</h2>
+  <% if @user.issued_tickets.any? %>
+    <ul>
+      <% @user.issued_tickets.each do |ticket| %>
+        <li><%= link_to ticket.title, ticket_path(ticket) %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>まだ発行したチケットはありません。</p>
+  <% end %>
+</div>

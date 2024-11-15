@@ -5,22 +5,6 @@ ja:
         unused: "未使用"
         used: "使用済み"
         unusable: "使用不可"
-    order:
-      order_status:
-        pending: "入金待ち"
-        confirmed: "入金確認"
-        in_progress: "製作中"
-        in_preparation: "発送準備中"
-        shipped: "発送済み"
-      payment_method:
-        credit_card: "クレジットカード"
-        transfer: "銀行振込"
-    order_detail:
-      making_status:
-        not_started: "着手不可"
-        payment_confirmed: "制作待ち"
-        in_progress: "製作中"
-        completed: "制作完了"
   activerecord:
     errors:
       messages:

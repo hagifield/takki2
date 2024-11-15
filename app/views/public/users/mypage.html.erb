@@ -29,15 +29,7 @@
     </div>
    </div>
   
-  <div class="tab-menu">
-    <%= link_to "投稿一覧", mypage_path(tab: "posts"), data: { turbo_frame: "content" } %>
-    <%= link_to "いいね一覧", mypage_path(tab: "likes"), data: { turbo_frame: "content" } %>
-    <%= link_to "発行したチケット", mypage_path(tab: "issued_tickets"), data: { turbo_frame: "content" } %>
-    <%= link_to "受け取ったチケット", mypage_path(tab: "received_tickets"), data: { turbo_frame: "content" } %>
-  </div>
   
-  <%= turbo_frame_tag "content" do %>
-    <%= render "public/users/mypage/#{params[:tab] || 'posts'}" %>
-  <% end %>
+  
   </div>
 </div>

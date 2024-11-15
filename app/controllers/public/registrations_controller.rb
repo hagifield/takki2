@@ -59,4 +59,15 @@ class Public::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+  protected
+
+  def after_sign_up_path_for(resource)
+    mypage_path # 一般ユーザー用のマイページにリダイレクト
+  end
+  
+  private
+
+  def sign_up_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
 end

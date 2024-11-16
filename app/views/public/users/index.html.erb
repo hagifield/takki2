@@ -1,2 +1,39 @@
 <h1>Public::Users#index</h1>
 <p>Find me in app/views/public/users/index.html.erb</p>
+
+<h1>ユーザー一覧</h1>
+
+<div>
+  <% @users.each do |user| %>
+    <div class="user-card">
+      <!-- ユーザー画像 -->
+      <% if user.profile_image.attached? %>
+        <%= link_to image_tag(user.profile_image.variant(resize: "50x50"), alt: user.name, class: "user-icon"), user_path(user) %>
+      <% else %>
+        <%= link_to image_tag("no-image.jpeg", alt: "デフォルトのプロフィール画像", size: "50x50", class: "user-icon"), user_path(user) %>
+      <% end %>
+
+      <!-- ユーザー名 -->
+      <%= link_to user.name, user_path(user), class: "user-name" %>
+
+      <!-- 自己紹介文 -->
+      <p class="user-introduction"><%= truncate(user.introduction, length: 100) %></p>
+
+      <!-- フォローボタン -->
+      <div class="follow-button">
+        <% if current_user.following?(user) %>
+          <%= button_to "フォロー解除", relationship_path(user), method: :delete, class: "btn btn-danger" %>
+        <% elsif current_user == user %>
+          <%= link_to "マイページ", mypage_path, class: "btn btn-primary"%>
+        <% else %>
+          <%= button_to "フォロー", relationships_path(followed_id: user.id), class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- ページネーション -->
+<div class="pagination">
+  <%= paginate @users %>
+</div>

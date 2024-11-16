@@ -28,7 +28,54 @@
       </p>
     </div>
    </div>
+  <!-- ユーザーいいね投稿一覧へのリンク -->
+  <div class="user-likes-posts">
+    <%= link_to user_post_likes_path(@user) do  %>
+      <p>あなたのいいねした投稿一覧</p>
+    <% end %>
+  </div>
   
+  <!-- ユーザーいいねチケット一覧へのリンク -->
+  <div class="user-likes-tickets">
+    <%= link_to user_ticket_likes_path(@user) do  %>
+      <p>あなたのいいねしたチケット一覧</p>
+    <% end %>
+  </div>
+  
+  <!-- ユーザー所有チケット一覧へのリンク -->
+  <div class="received_tickets">
+    <%= link_to user_tickets_path(@user) do  %>
+      <p>あなたの所有チケット一覧</p>
+    <% end %>
+  </div>
+  
+  <!-- ユーザー発行チケット一覧へのリンク -->
+  <div class="issued_tickets">
+    <%= link_to user_issued_tickets_path(@user) do  %>
+      <p>あなたの発行したチケット一覧</p>
+    <% end %>
+  </div>
+  
+  <!-- ユーザー投稿 -->
+  <div class="user-posts">
+    <% if @user.posts.any? %>
+      <% @user.posts.each do |post| %>
+      
+        <p><%= post.text_content %></p>
+        
+        <% if post.ticket_id.present? %>
+          <p><%= post.ticket.name %></p>
+        <% end %>
+        
+        <% if post.image.attached? %>
+          <%= post.image %>
+        <% end %>
+        
+      <% end %>
+    <% else %>
+      <p>まだ投稿がありません</p>
+    <% end %>
+  </div>
   
   
   </div>

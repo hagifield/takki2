@@ -54,7 +54,7 @@ class Public::UsersController < ApplicationController
 
   def correct_user
     unless @user == current_user
-      redirect_to mypage_path, alert: '権限がありません。'
+      redirect_to mypage_path, alert: '権限がありません。無効なアクセスです。'
     end
   end
 end

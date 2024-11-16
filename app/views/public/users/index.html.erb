@@ -7,14 +7,26 @@
   <% @users.each do |user| %>
     <div class="user-card">
       <!-- ユーザー画像 -->
-      <% if user.profile_image.attached? %>
-        <%= link_to image_tag(user.profile_image.variant(resize: "50x50"), alt: user.name, class: "user-icon"), user_path(user) %>
-      <% else %>
-        <%= link_to image_tag("no-image.jpeg", alt: "デフォルトのプロフィール画像", size: "50x50", class: "user-icon"), user_path(user) %>
+      <% if user != current_user %>
+        <% if user.profile_image.attached? %>
+          <%= link_to image_tag(user.profile_image.variant(resize: "50x50"), alt: user.name, class: "user-icon"), user_path(user) %>
+        <% else %>
+          <%= link_to image_tag("no-image.jpeg", alt: "デフォルトのプロフィール画像", size: "50x50", class: "user-icon"), user_path(user) %>
+        <% end %>
+      <% elsif user == current_user %>
+        <% if user.profile_image.attached? %>
+          <%= link_to image_tag(user.profile_image.variant(resize: "50x50"), alt: user.name, class: "user-icon"), mypage_path %>
+        <% else %>
+          <%= link_to image_tag("no-image.jpeg", alt: "デフォルトのプロフィール画像", size: "50x50", class: "user-icon"), mypage_path %>
+        <% end %>
       <% end %>
 
       <!-- ユーザー名 -->
-      <%= link_to user.name, user_path(user), class: "user-name" %>
+      <% if user != current_user %>
+        <%= link_to user.name, user_path(user), class: "user-name" %>
+      <% elsif user == current_user %>
+        <%= link_to user.name, mypage_path, class: "user-name" %>
+      <% end %>
 
       <!-- 自己紹介文 -->
       <p class="user-introduction"><%= truncate(user.introduction, length: 100) %></p>

@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   registrations: "public/registrations",
   sessions: 'public/sessions'
   }
+  
+  devise_scope :user do
+    get '/users/sign_out' => 'devise/sessions#destroy'
+  end
   # Public側
   scope module: :public do
     # Homes
@@ -33,6 +37,7 @@ Rails.application.routes.draw do
 
     # Tickets
     get 'tickets/users/:id', to: 'tickets#my_tickets', as: 'user_tickets' # 自分の所持しているチケット一覧
+    get 'tickets/users/:id/issued', to: 'tickets#my_issued_tickets', as: 'user_issued_tickets' # 自分の発行したチケット一覧
     resources :tickets do
       member do
         get 'transfer'
@@ -46,11 +51,9 @@ Rails.application.routes.draw do
 
     # Likes
     resources :likes, only: [:create, :destroy] do
-      collection do
-        get 'users/:id/posts', to: 'likes#index_posts', as: 'user_post_likes'
-        get 'users/:id/tickets', to: 'likes#index_tickets', as: 'user_ticket_likes'
-      end
     end
+    get 'users/:id/likes/posts', to: 'likes#index_posts', as: 'user_post_likes'
+    get 'users/:id/likes/tickets', to: 'likes#index_tickets', as: 'user_ticket_likes'
 
     # Ownerships
     resources :ownerships, only: [:create, :destroy]

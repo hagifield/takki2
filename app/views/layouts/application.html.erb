@@ -1,16 +1,137 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Takki2</title>
+    <title>Takki</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script src="https://kit.fontawesome.com/0e44a172cd.js" crossorigin="anonymous"></script>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="d-flex flex-column vh-100">
+    <header class="shadow-sm">
+     <nav class="navbar navbar-expand-lg navbar-light">
+      
+      <div class="container">
+       
+       <% if admin_signed_in? %>
+        <%= link_to admin_path, class: "navbar-brand p-3" do %>
+         <p>Takki</p>
+        <% end %>
+       <% else %>
+        <%= link_to root_path, class: "navbar-brand p-3" do %>
+         <p>Takki</p>
+        <% end %>
+       <% end %>
+       
+       <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+       </button>
+      
+       <div class="d-flex justify-content-end collapse navbar-collapse" id="navbarNavDropdown">
+        
+        <% if user_signed_in? %>
+         
+         <p class="mx-5">ようこそ、<%= current_user.name %>さん!</p>
+         
+         <ul class = "navbar-nav ml-auto p-2" >
+           <li class="nav-item">
+            <%= link_to mypage_path(current_user), class:"btn btn-light" do %>
+             <p>マイページ</p>
+            <% end %>
+           </li>
+           
+           <li class="nav-item">
+            <%= link_to users_path, class:"btn btn-light" do %>
+             <p>ユーザー一覧</p>
+            <% end %>
+           </li>
+           
+           <li class="nav-item mx-2">
+            <%= link_to new_post_path,class:"btn btn-light" do %>
+             <p>新規投稿</p>
+            <% end %>
+           </li>
+           
+           
+           <li class="nav-item mx-2">
+            <%= link_to destroy_user_session_path, method: :delete,class:"btn btn-light" do %>
+             <p>ログアウト</p>
+            <% end %>
+           </li>
+         </ul>
+        <% elsif admin_signed_in? %>
+         <ul class="navbar-nav ml-auto p-2">
+           <li class="nav-item mx-2">
+            <%= link_to tickets_path,class:"btn btn-light" do %>
+             <p>チケット一覧</p>
+            <% end %>
+           </li>
+           
+           <li class="nav-item mx-2">
+            <%= link_to admin_users_path,class:"btn btn-light" do %>
+             <p>ユーザー一覧</p>
+            <% end %>
+           </li>
+           
+           <li class="nav-item mx-2">
+            <%= link_to posts_path,class:"btn btn-light" do %>
+             <p>投稿一覧</p>
+            <% end %>
+           </li>
+           
+           
+           <li class="nav-item mx-2">
+            <%= link_to destroy_admin_session_path, method: :delete,class:"btn btn-light" do %>
+             <p>ログアウト</p>
+            <% end %>
+           </li>
+         </ul>
+         
+        <% else %>
+         <ul class="navbar-nav ml-auto p-2">
+           
+           <li class="nav-item mx-2">
+            <%= link_to tickets_path,class:"btn btn-light" do %>
+             <p class="align-middle">チケット一覧</p>
+            <% end %>
+           </li>
+           
+           <li class="nav-item mx-2">
+            <%= link_to new_user_registration_path,class:"btn btn-light" do %>
+             <p>新規登録</p>
+            <% end %>
+           </li>
+           <li class="nav-item mx-2">
+            <%= link_to new_user_session_path,class:"btn btn-light" do %>
+             <p>ログイン</p>
+            <% end %>
+           </li>
+         </ul>
+        <% end %>
+        
+       </div> <!-- collaps終了 -->
+       
+      </div><!-- containar class終了 -->
+     </nav><!-- nav終了 -->
+      
+    </header>
+    
+    <main>
+     <div class="container my-5 px-5 px-sm-0">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <%= yield %>
+     </div>
+    </main>
+    
+    <footer class="bg-light text-white pt-5 pb-4">
+     
+    </footer>
+    
+    
   </body>
 </html>

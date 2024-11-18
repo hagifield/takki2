@@ -1,24 +1,16 @@
 class Ticket < ApplicationRecord
-    
-#チケットステータスのenum設定
+  # チケットの状態を管理するenum
   enum status: { unused: 0, used: 1, unusable: 2 }
-  
-  #バリデーション
-  with_options presence: true do
-    validates :name
-    validates :description
-    validates :expiration_date
-    validates :quantity
-    validates :available_quantity
-    validates :status
-  end
-  
+
+  # 発行者と受取人の関連付け
+  belongs_to :issuer, class_name: "User", foreign_key: "issuer_id"
+  belongs_to :recipient, class_name: "User", foreign_key: "recipient_id", optional: true
+
   # 所有権モデルとの関連付け
   has_many :ownerships, dependent: :destroy
-  # チケットの所有者を取得
   has_many :owners, through: :ownerships, source: :user
 
-  # 投稿モデルとの関連付け: チケットは投稿に含まれる
+  # 投稿モデルとの関連付け: チケットは投稿に含まれる場合がある
   belongs_to :post, optional: true
 
   # Active Storage設定: チケットのQRコード
@@ -29,7 +21,21 @@ class Ticket < ApplicationRecord
 
   # チケットに対するコメント
   has_many :comments, as: :commentable, dependent: :destroy
-  
+
   # 通知とのポリモーフィック関連付け
   has_many :notifications, as: :notifiable, dependent: :destroy
+
+  # バリデーション
+  validates :name, presence: true
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+
+  # デフォルト値の設定
+  before_create :set_defaults
+
+  private
+
+  def set_defaults
+    self.status ||= :unused
+    self.private ||= false
+  end
 end

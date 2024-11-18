@@ -1,2 +1,61 @@
-<h1>Public::Posts#index</h1>
-<p>Find me in app/views/public/posts/index.html.erb</p>
+<h1>投稿一覧</h1>
+
+<%= paginate @posts %> <!-- ページネーション -->
+
+<div class="posts">
+  <% @posts.each do |post| %>
+    <% if post.user_id != current_user.id %>
+      <%= link_to user_path(post.user_id) do %>
+          <div class="post-user">
+            <% if post.user.profile_image.attached? %>
+              <%= image_tag post.user.profile_image,size: "50x50", class: "avatar" %>
+            <% else %>
+              <%= image_tag "no-image.jpeg",size: "50x50", class: "avatar" %>
+            <% end %>
+            
+            <%= post.user.name %>
+          </div>
+      <% end %>
+    <% elsif post.user_id == current_user.id %>
+      <%= link_to mypage_path do %>
+        <div class="post-user">
+            <% if post.user.profile_image.attached? %>
+              <%= image_tag post.user.profile_image,size: "50x50", class: "avatar" %>
+            <% else %>
+              <%= image_tag "no-image.jpeg",size: "50x50", class: "avatar" %>
+            <% end %>
+            
+            <%= post.user.name %>
+          </div>
+      <% end %>
+    <% end %>
+    <div class="post">
+      <%= link_to post_path(post) do %>
+          <!-- 投稿のテキスト内容を表示 -->
+          <p><%= post.text_content %></p>
+    
+          <!-- 投稿に画像がある場合はすべて表示 -->
+          <% if post.images.attached? %>
+            <div class="post-images">
+              <% post.images.each do |image| %>
+                <%= image_tag image, size: "150x150", class: "post-image" %>
+              <% end %>
+            </div>
+          <% end %>
+    
+          <!-- 投稿にチケットがある場合はチケット情報を表示 -->
+          <% if post.ticket_id.present? %>
+            <div class="post-ticket">
+              <h3>チケット情報</h3>
+              <p><strong>名前:</strong> <%= post.ticket.name %></p>
+              <p><strong>説明:</strong> <%= post.ticket.description %></p>
+              <p><strong>有効期限:</strong> <%= post.ticket.expiration_date %></p>
+              <p><strong>枚数:</strong> <%= post.ticket.quantity %></p>
+            </div>
+          <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<%= paginate @posts %> <!-- ページネーション -->

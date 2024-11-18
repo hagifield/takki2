@@ -1,2 +1,35 @@
-<h1>Public::Posts#new</h1>
-<p>Find me in app/views/public/posts/new.html.erb</p>
+<h1>新規投稿</h1>
+
+<%= form_with model: @post, local: true do |f| %>
+  <!-- テキストコンテンツ (必須) -->
+  <div class="form-group">
+    <%= f.label :text_content, "投稿内容" %>
+    <%= f.text_area :text_content, value: @post.text_content, placeholder: "ここに投稿内容を入力してください", required: true, class: "form-control" %>
+  </div>
+
+  <!-- 画像 (任意) -->
+  <div class="form-group">
+    <%= f.label :images, "画像 (任意)" %>
+    <%= f.file_field :images, multiple: true, accept: "image/*" %>
+  </div>
+
+  <!-- チケット (発行済み・未使用限定) -->
+  <div class="form-group">
+    <%= f.label :ticket_id, "チケットを選択 (任意)" %>
+    <% if @tickets.any? %>
+      <%= f.collection_select :ticket_id, @tickets, :id, :name, include_blank: true, class: "form-control" %>
+    <% else %>
+      <p>投稿可能な未使用のチケットがありません。</p>
+    <% end %>
+  </div>
+
+  <!-- 新規チケット作成リンク -->
+  <div class="form-group">
+    <%= link_to "新しいチケットを作成する", new_ticket_path(redirect_to: "new_post", saved_text_content: @post.text_content), class: "btn btn-primary" %>
+  </div>
+
+  <!-- 投稿ボタン -->
+  <div class="form-group">
+    <%= f.submit "投稿する", class: "btn btn-success" %>
+  </div>
+<% end %>

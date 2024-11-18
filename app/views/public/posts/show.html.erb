@@ -1,2 +1,61 @@
-<h1>Public::Posts#show</h1>
-<p>Find me in app/views/public/posts/show.html.erb</p>
+<div class="post-detail">
+  <!-- ユーザー情報 -->
+  <div class="user-info">
+    <%# ユーザーアイコンの表示 %>
+    <div class="user-icon">
+      <% if @post.user.profile_image.attached? %>
+        <%= image_tag @post.user.profile_image, class: "avatar" %>
+      <% else %>
+        <%= image_tag "no-image.jpeg", class: "avatar" %>
+      <% end %>
+    </div>
+
+    <%# ユーザー名の表示 %>
+    <div class="user-name">
+      <%= @post.user.name %>
+    </div>
+
+    <%# フォロー/フォロー解除ボタンの表示 (自身の投稿の場合は非表示) %>
+    <% if current_user != @post.user %>
+      <% if current_user.following?(@post.user) %>
+        <%= button_to "フォロー解除", relationship_path(@post.user), method: :delete, class: "btn btn-secondary" %>
+      <% else %>
+        <%= button_to "フォロー", relationships_path(followed_id: @post.user.id), method: :post, class: "btn btn-primary" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- 投稿内容 -->
+  <div class="post-content">
+    <%# テキストコンテンツの表示 %>
+    <p><%= @post.text_content %></p>
+
+    <%# 画像の表示 (複数対応) %>
+    <% if @post.images.attached? %>
+      <div class="post-images">
+        <% @post.images.each do |image| %>
+          <%= image_tag image, size: "150x150", class: "post-image" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# チケットの表示 %>
+    <% if @post.ticket_id.present? %>
+      <div class="post-tickets">
+        <% @post.tickets.each do |ticket| %>
+          <div class="ticket-info">
+            <h3>チケット情報</h3>
+            <p><strong>名前:</strong> <%= ticket.name %></p>
+            <p><strong>説明:</strong> <%= ticket.description %></p>
+            <p><strong>有効期限:</strong> <%= ticket.expiration_date %></p>
+            <p><strong>枚数:</strong> <%= ticket.quantity %></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <% if @post.user_id == current_user.id %>
+      <%= link_to "編集する", edit_post_path(@post) %>
+    <% end %>
+  </div>
+</div>

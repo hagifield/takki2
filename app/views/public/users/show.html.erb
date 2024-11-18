@@ -43,16 +43,31 @@
    <!-- ユーザー投稿 -->
    <div class="user-posts">
      <h2>投稿一覧</h2>
-      <% if @user.posts.any? %>
-        <ul>
-          <% @user.posts.each do |post| %>
-            <li>
-              <% link_to post_path(post) do %>
-                <p><%= truncate(post.content, length: 100) %></p>
-              <% end %>
-            </li>
+      <% if @posts.present? %>
+          <% @posts.each do |post| %>
+            <p><%= post.text_content %></p>
+    
+            <!-- 投稿に画像がある場合はすべて表示 -->
+            <% if post.images.attached? %>
+              <div class="post-images">
+                <% post.images.each do |image| %>
+                  <%= image_tag image, size: "150x150", class: "post-image" %>
+                <% end %>
+              </div>
+            <% end %>
+      
+            <!-- 投稿にチケットがある場合はチケット情報を表示 -->
+            <% if post.ticket_id.present? %>
+              <div class="post-ticket">
+                <h3>チケット情報</h3>
+                <p><strong>名前:</strong> <%= post.ticket.name %></p>
+                <p><strong>説明:</strong> <%= post.ticket.description %></p>
+                <p><strong>有効期限:</strong> <%= post.ticket.expiration_date %></p>
+                <p><strong>枚数:</strong> <%= post.ticket.quantity %></p>
+              </div>
+            <% end %>
           <% end %>
-        </ul>
+        
       <% else %>
         <p>まだ投稿がありません。</p>
       <% end %>

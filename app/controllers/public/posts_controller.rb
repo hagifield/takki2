@@ -1,21 +1,23 @@
 class Public::PostsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_tickets, only: [:new, :create]
   
   
   def new
-    @post = Post.new
+    @post = Post.new(
+      text_content: params[:saved_text_content], # 保存されたテキストを復元
+      image: params[:saved_image] # 保存された画像情報を復元
+    )
   end
 
   def create
-    @post = Post.new(post_params)
-    @post.user_id = current_user.id
+    @post = current_user.posts.build(post_params) # 親モデル(current_user)に関連付けた投稿を作成
 
     if @post.save
-      redirect_to post_path(@post), notice: '投稿が作成されました。'
+      redirect_to @post, notice: '投稿が作成されました。'
     else
-      flash.now[:alert] = '投稿の作成に失敗しました。'
-      render :new
+      render :new, alert: '投稿の作成に失敗しました。'
     end
   end
 
@@ -23,7 +25,7 @@ class Public::PostsController < ApplicationController
   end
 
   def index
-    @posts = Post.all.order(created_at: :desc).page(params[:page]).per(10)
+    @posts = Post.all.order(created_at: :desc).page(params[:page]).per(30)
   end
 
   def edit
@@ -51,11 +53,17 @@ class Public::PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:text_content, :image, :ticket_id)
+    params.require(:post).permit(:text_content, :ticket_id, images: [])
   end
 
   def set_post
     @post = Post.find(params[:id])
   end
+  
+  # 発行済みかつ未使用のチケットを取得
+  def set_tickets
+    @tickets = current_user.issued_tickets.unused
+  end
+
   
 end

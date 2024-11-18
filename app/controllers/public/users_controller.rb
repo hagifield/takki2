@@ -5,6 +5,7 @@ class Public::UsersController < ApplicationController
 
   def mypage
     @user = current_user
+    @posts = @user.posts.order(created_at: :desc) # 投稿を新しい順に並び替え
   end
 
   def edit
@@ -21,6 +22,7 @@ class Public::UsersController < ApplicationController
 
   def show
     # 他のユーザーのプロフィールを表示。@userはbefore_actionのset_userで設定済み
+    @posts = @user.posts.order(created_at: :desc) # 投稿を新しい順に並び替え
   end
 
   def index

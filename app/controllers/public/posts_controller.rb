@@ -32,13 +32,26 @@ class Public::PostsController < ApplicationController
     redirect_to posts_path, alert: '編集権限がありません。' unless @post.user == current_user
   end
 
+
   def update
+    
+    # 削除する画像の処理
+    if params[:remove_images].present?
+      params[:remove_images].each do |signed_id|
+        image = @post.images.find { |img| img.signed_id == signed_id }
+        image.purge if image.present?
+      end
+    end
+  
+    # 投稿の更新
     if @post.user == current_user && @post.update(post_params)
-      redirect_to @post, notice: '投稿が更新されました。'
+      redirect_to post_path(@post), notice: '投稿が更新されました。'
     else
-      flash.now[:alert] = '投稿の更新に失敗しました。'
+      @tickets = current_user.tickets.where(status: "unused")
       render :edit
     end
+  
+    
   end
 
   def destroy

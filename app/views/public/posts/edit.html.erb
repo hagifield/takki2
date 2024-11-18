@@ -1,2 +1,56 @@
-<h1>Public::Posts#edit</h1>
-<p>Find me in app/views/public/posts/edit.html.erb</p>
+<h1>投稿編集</h1>
+
+<%= form_with model: @post, local: true do |f| %>
+  <!-- テキストコンテンツ (必須) -->
+  <div class="form-group">
+    <%= f.label :text_content, "投稿内容" %>
+    <%= f.text_area :text_content, value: @post.text_content, placeholder: "ここに投稿内容を入力してください", required: true, class: "form-control" %>
+  </div>
+
+  <!-- 画像 (任意) -->
+  <div class="form-group">
+    <%= f.label :images, "画像 (任意)" %>
+    <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
+  </div>
+
+  <!-- 既存の画像を表示 -->
+  <% if @post.images.attached? %>
+    <div class="form-group">
+      <p>現在の画像:</p>
+      <div class="current-images">
+        <% @post.images.each do |image| %>
+          <div class="image-container">
+            <%= image_tag image, size: "150x150", class: "current-image" %>
+            <%= check_box_tag "remove_images[]", image.signed_id %>
+            <%= label_tag "remove_images[]", "削除する" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- チケット (発行済み・未使用限定) -->
+  <div class="form-group">
+    <%= f.label :ticket_id, "チケットを選択 (任意)" %>
+    <% if @tickets.present? %>
+      <%= f.collection_select :ticket_id, @tickets, :id, :name, include_blank: true, selected: @post.ticket_id, class: "form-control" %>
+    <% else %>
+      <p>投稿可能な未使用のチケットがありません。</p>
+    <% end %>
+  </div>
+
+  <!-- 新規チケット作成リンク -->
+  <div class="form-group">
+    <%= link_to "新しいチケットを作成する", new_ticket_path(redirect_to: "edit_post", saved_text_content: @post.text_content), class: "btn btn-primary" %>
+  </div>
+
+  <!-- 更新ボタン -->
+  <div class="form-group">
+    <%= f.submit "更新する", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<!-- 投稿削除ボタン -->
+<div class="form-group">
+  <%= button_to "投稿を削除する", post_path(@post), method: :delete, data: { confirm: "本当にこの投稿を削除してよろしいですか？" }, class: "btn btn-danger" %>
+</div>

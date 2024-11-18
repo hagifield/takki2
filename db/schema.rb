@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.integer "quantity", null: false
     t.integer "available_quantity", null: false
     t.integer "status", default: 0, null: false
+    t.boolean "private", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

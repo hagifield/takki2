@@ -9,6 +9,7 @@ class CreateTickets < ActiveRecord::Migration[6.1]
       t.integer :quantity, null: false
       t.integer :available_quantity, null: false
       t.integer :status, null: false, default: 0
+      t.boolean :private, null: false, default: false
       t.timestamps
     end
   end

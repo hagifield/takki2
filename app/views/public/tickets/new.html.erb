@@ -1,2 +1,42 @@
-<h1>Public::Tickets#new</h1>
-<p>Find me in app/views/public/tickets/new.html.erb</p>
+<h1>チケット新規作成</h1>
+
+<%= form_with model: @ticket, url: tickets_path, local: true do |f| %>
+  <!-- チケット名 -->
+  <div class="form-group">
+    <%= f.label :name, "チケット名", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "例: 肩たたき券", required: true %>
+  </div>
+
+  <!-- 説明 -->
+  <div class="form-group">
+    <%= f.label :description, "説明 (任意)", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", placeholder: "詳細を入力してください" %>
+  </div>
+
+  <!-- 有効期限 -->
+  <div class="form-group">
+    <%= f.label :expiration_date, "有効期限 (任意)", class: "form-label" %>
+    <%= f.date_field :expiration_date, class: "form-control" %>
+    <small class="form-text text-muted">指定しない場合は有効期限なしになります</small>
+  </div>
+
+  <!-- 枚数 -->
+  <div class="form-group">
+    <%= f.label :quantity, "枚数", class: "form-label" %>
+    <%= f.number_field :quantity, value: 1, min: 1, class: "form-control", required: true %>
+  </div>
+
+  <!-- 渡すユーザー -->
+  <div class="form-group">
+    <%= f.label :recipient_id, "直接渡すユーザー (任意)", class: "form-label" %>
+    <%= f.collection_select :recipient_id, @followed_users, :id, :name, { include_blank: "選択しない" }, class: "form-control" %>
+    <small class="form-text text-muted">フォローしているユーザーから選択できます</small>
+  </div>
+
+  <!-- 提出ボタン -->
+  <div class="form-group">
+    <%= f.submit "チケットを作成", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<%= link_to "戻る", tickets_path, class: "btn btn-secondary" %>

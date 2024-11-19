@@ -1,2 +1,41 @@
-<h1>Public::Tickets#show</h1>
-<p>Find me in app/views/public/tickets/show.html.erb</p>
+<h1>チケット詳細</h1>
+
+<div class="card">
+  <div class="card-body">
+    <!-- チケット名 -->
+    <h2><%= @ticket.name %></h2>
+
+    <!-- チケット説明 -->
+    <% if @ticket.description.present? %>
+      <p><strong>説明:</strong> <%= @ticket.description %></p>
+    <% else %>
+      <p><strong>説明:</strong> 記載なし</p>
+    <% end %>
+
+    <!-- 有効期限 -->
+    <p><strong>有効期限:</strong> 
+      <%= @ticket.expiration_date ? @ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+    </p>
+
+    <!-- 枚数 -->
+    <p><strong>枚数:</strong> <%= @ticket.quantity %></p>
+
+    <!-- ステータス -->
+    <% if @ticket.issuer_id == current_user.id %>
+      <p><strong>ステータス:</strong> 
+        <% if @ticket.private %>
+          <span class="badge bg-warning">プライベート</span>
+        <% else %>
+          <span class="badge bg-success">公開</span>
+        <% end %>
+      </p>
+    <% end %>
+
+    <!-- 受取人 -->
+    <p><strong>受取人:</strong> 
+      <%= @ticket.recipient ? @ticket.recipient.name : "指定なし" %>
+    </p>
+  </div>
+</div>
+
+<%= link_to "戻る", tickets_path, class: "btn btn-secondary mt-3" %>

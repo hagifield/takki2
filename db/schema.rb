@@ -116,11 +116,10 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
   create_table "tickets", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "issuer_id", null: false
-    t.bigint "recipient_id", null: false
-    t.text "description", null: false
-    t.date "expiration_date", null: false
+    t.bigint "recipient_id"
+    t.text "description"
+    t.date "expiration_date"
     t.integer "quantity", null: false
-    t.integer "available_quantity", null: false
     t.integer "status", default: 0, null: false
     t.boolean "private", default: false, null: false
     t.datetime "created_at", precision: 6, null: false

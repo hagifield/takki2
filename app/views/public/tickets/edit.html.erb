@@ -1,2 +1,40 @@
-<h1>Public::Tickets#edit</h1>
-<p>Find me in app/views/public/tickets/edit.html.erb</p>
+<h1>チケットを編集</h1>
+
+<%= form_with model: @ticket, url: ticket_path(@ticket), method: :patch, local: true do |f| %>
+  <!-- チケット名 -->
+  <div class="form-group">
+    <%= f.label :name, "チケット名", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <!-- 説明 -->
+  <div class="form-group">
+    <%= f.label :description, "説明 (任意)", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control" %>
+  </div>
+
+  <!-- 有効期限 -->
+  <div class="form-group">
+    <%= f.label :expiration_date, "有効期限", class: "form-label" %>
+    <%= f.date_field :expiration_date, class: "form-control" %>
+  </div>
+
+  <!-- 枚数 -->
+  <div class="form-group">
+    <%= f.label :quantity, "枚数", class: "form-label" %>
+    <%= f.number_field :quantity, class: "form-control", required: true, min: 1 %>
+  </div>
+
+  <!-- プライベート設定 -->
+  <div class="form-group form-check">
+    <%= f.check_box :private, class: "form-check-input" %>
+    <%= f.label :private, "プライベート（非公開）チケットにする", class: "form-check-label" %>
+  </div>
+
+  <!-- 更新ボタン -->
+  <div class="form-group">
+    <%= f.submit "更新する", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<%= link_to "キャンセル", ticket_path(@ticket), class: "btn btn-secondary mt-3" %>

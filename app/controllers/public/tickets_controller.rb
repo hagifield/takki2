@@ -1,6 +1,6 @@
 class Public::TicketsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :destroy] # ユーザー認証を必須にする
-  before_action :set_ticket, only: [:show, :destroy]
+  before_action :set_ticket, only: [:show, :edit, :update, :destroy]
   before_action :ensure_issuer, only: [:destroy]
 
 
@@ -32,6 +32,19 @@ class Public::TicketsController < ApplicationController
   
   def show
     #@ticketはset_ticketで設定
+  end
+  
+  def edit
+    #@ticketはset_ticketで設定
+  end
+
+  def update
+    if @ticket.update(ticket_params)
+      redirect_to ticket_path(@ticket), notice: "チケットが更新されました。"
+    else
+      flash.now[:alert] = "チケットの更新に失敗しました。"
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   # チケットを特定のユーザーに直接渡す
@@ -76,6 +89,6 @@ class Public::TicketsController < ApplicationController
   
   
   def ticket_params
-    params.require(:ticket).permit(:name, :description, :expiration_date, :quantity, :recipient_id)
+    params.require(:ticket).permit(:name, :description, :expiration_date, :quantity, :recipient_id, :private)
   end
 end

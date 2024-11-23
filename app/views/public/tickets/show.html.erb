@@ -24,7 +24,7 @@
     <% if @ticket.issuer_id == current_user.id %>
       <p><strong>ステータス:</strong> 
         <% if @ticket.private %>
-          <span class="badge bg-warning">プライベート</span>
+          <span class="badge bg-warning">プライベート（非公開）</span>
         <% else %>
           <span class="badge bg-success">公開</span>
         <% end %>

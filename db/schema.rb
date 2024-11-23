@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_01_112517) do
+ActiveRecord::Schema.define(version: 2024_11_23_121547) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -68,6 +68,18 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
+  end
+
+  create_table "individual_tickets", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.bigint "owner_id"
+    t.string "serial_number", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_individual_tickets_on_owner_id"
+    t.index ["serial_number", "ticket_id"], name: "index_individual_tickets_on_serial_and_ticket", unique: true
+    t.index ["ticket_id"], name: "index_individual_tickets_on_ticket_id"
   end
 
   create_table "likes", force: :cascade do |t|

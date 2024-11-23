@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.string "name", null: false
     t.bigint "issuer_id", null: false
     t.bigint "recipient_id"
+    t.integer "post_id"
     t.text "description"
     t.date "expiration_date"
     t.integer "quantity", null: false

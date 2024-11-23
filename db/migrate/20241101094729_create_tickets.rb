@@ -4,6 +4,7 @@ class CreateTickets < ActiveRecord::Migration[6.1]
       t.string :name, null: false
       t.bigint :issuer_id, null: false
       t.bigint :recipient_id
+      t.integer :post_id
       t.text :description
       t.date :expiration_date
       t.integer :quantity, null: false

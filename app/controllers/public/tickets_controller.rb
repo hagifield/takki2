@@ -1,5 +1,8 @@
 class Public::TicketsController < ApplicationController
-  before_action :authenticate_user! # ユーザー認証を必須にする
+  before_action :authenticate_user!, only: [:new, :create, :destroy] # ユーザー認証を必須にする
+  before_action :set_ticket, only: [:show, :destroy]
+  before_action :ensure_issuer, only: [:destroy]
+
 
   # 新規チケット作成フォーム
   def new
@@ -23,11 +26,12 @@ class Public::TicketsController < ApplicationController
 
   # 発行したチケット一覧
   def index
-    @tickets = current_user.issued_tickets.order(created_at: :desc)
+    # 公開されているチケットを取得
+    @tickets = Ticket.where(private: false).order(created_at: :desc)
   end
   
   def show
-    @ticket = Ticket.find(params[:id])
+    #@ticketはset_ticketで設定
   end
 
   # チケットを特定のユーザーに直接渡す
@@ -42,10 +46,35 @@ class Public::TicketsController < ApplicationController
       redirect_to tickets_path, alert: "受取人が見つかりませんでした"
     end
   end
+  
+  def destroy
+    if @ticket.destroy
+      flash[:notice] = "チケットを削除しました。"
+      redirect_to tickets_path
+    else
+      flash[:alert] = "チケットの削除に失敗しました。"
+      redirect_to ticket_path(@ticket)
+    end
+  end
+
+
+
 
   private
+  
+  def set_ticket
+    @ticket = Ticket.find(params[:id])
+  end
 
-  # Strong Parameters
+  # チケットの発行者であることを確認する
+  def ensure_issuer
+    unless @ticket.issuer_id == current_user.id
+      flash[:alert] = "チケットを削除する権限がありません。"
+      redirect_to tickets_path
+    end
+  end
+  
+  
   def ticket_params
     params.require(:ticket).permit(:name, :description, :expiration_date, :quantity, :recipient_id)
   end

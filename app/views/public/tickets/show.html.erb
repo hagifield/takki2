@@ -35,7 +35,12 @@
     <p><strong>受取人:</strong> 
       <%= @ticket.recipient ? @ticket.recipient.name : "指定なし" %>
     </p>
+    
+    <% if @ticket.issuer_id == current_user.id %>
+      <%= link_to "編集する", edit_ticket_path(@ticket) %>
+      <%= button_to "削除する", ticket_path(@ticket), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
+    <% end %>
   </div>
 </div>
 
-<%= link_to "戻る", tickets_path, class: "btn btn-secondary mt-3" %>
+<%= link_to "チケット一覧へ戻る", tickets_path, class: "btn btn-secondary mt-3" %>

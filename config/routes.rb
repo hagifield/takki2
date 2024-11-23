@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
     # Tickets
     get 'tickets/users/:id', to: 'tickets#my_tickets', as: 'user_tickets' # 自分の所持しているチケット一覧
-    get 'tickets/users/:id/issued', to: 'tickets#my_issued_tickets', as: 'user_issued_tickets' # 自分の発行したチケット一覧
+    get 'tickets/issued_tickets/:user_id', to: 'tickets#issued_tickets', as: 'user_issued_tickets' # ユーザーの発行したチケット一覧。パスの最後はユーザーIDを受け取る。
     resources :tickets do
       member do
         get 'transfer'

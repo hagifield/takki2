@@ -1,0 +1,41 @@
+<h1><%= @user.name %> さんが発行したチケット一覧</h1>
+
+<% if @tickets.any? %>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% @tickets.each do |ticket| %>
+      <div class="col">
+        <div class="card h-100">
+          <!-- カードヘッダー -->
+          <div class="card-header">
+            <h5 class="card-title"><%= ticket.name %></h5>
+          </div>
+
+          <!-- カードボディ -->
+          <div class="card-body">
+            <!-- 説明 -->
+            <% if ticket.description.present? %>
+              <p class="card-text"><%= truncate(ticket.description, length: 100) %></p>
+            <% else %>
+              <p class="card-text text-muted">説明なし</p>
+            <% end %>
+
+            <!-- 有効期限 -->
+            <p class="card-text">
+              <strong>有効期限:</strong>
+              <%= ticket.expiration_date ? ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+            </p>
+          </div>
+
+          <!-- カードフッター -->
+          <div class="card-footer text-center">
+            <%= link_to "詳細を見る", ticket_path(ticket), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>公開されているチケットはありません。</p>
+<% end %>
+
+<%= link_to "戻る", tickets_path, class: "btn btn-secondary mt-3" %>

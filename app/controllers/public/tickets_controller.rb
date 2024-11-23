@@ -69,6 +69,15 @@ class Public::TicketsController < ApplicationController
       redirect_to ticket_path(@ticket)
     end
   end
+  
+  def issued_tickets
+    @user = User.find(params[:user_id]) # 発行ユーザーを特定
+    if @user != current_user
+      @tickets = @user.issued_tickets.where(private: false).order(created_at: :desc)
+    elsif @user == current_user
+      @tickets = @user.issued_tickets.order(created_at: :desc)
+    end
+  end
 
 
 

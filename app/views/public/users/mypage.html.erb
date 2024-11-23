@@ -51,7 +51,7 @@
   
   <!-- ユーザー発行チケット一覧へのリンク -->
   <div class="issued_tickets">
-    <%= link_to user_issued_tickets_path(@user) do  %>
+    <%= link_to user_issued_tickets_path(@user.id) do  %>
       <p>あなたの発行したチケット一覧</p>
     <% end %>
   </div>

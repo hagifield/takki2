@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
+  
+  
   # Public側
   scope module: :public do
     # Homes
@@ -55,8 +57,6 @@ Rails.application.routes.draw do
     get 'users/:id/likes/posts', to: 'likes#index_posts', as: 'user_post_likes'
     get 'users/:id/likes/tickets', to: 'likes#index_tickets', as: 'user_ticket_likes'
 
-    # Ownerships
-    resources :ownerships, only: [:create, :destroy]
 
     # Relationships (follows/unfollows)
     resources :relationships, only: [:create, :destroy]

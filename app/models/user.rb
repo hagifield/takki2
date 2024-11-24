@@ -29,12 +29,9 @@ class User < ApplicationRecord
   # ユーザーが受け取ったチケットとの関連付け
   has_many :received_tickets, class_name: "Ticket", foreign_key: "recipient_id", dependent: :destroy
   
-  
-# 所有権モデル関連付け
-  has_many :ownerships, dependent: :destroy
-  
-  # 所有しているチケットを取得するための関連付け
-  has_many :owned_tickets, through: :ownerships, source: :ticket
+  # 個別チケットモデル関連付け。所有権も兼ねる。
+  has_many :owned_individual_tickets, class_name: "IndividualTicket", foreign_key: :owner_id, dependent: :nullify
+
   
 # いいね機能の関連付け（ポリモーフィック）
   has_many :likes, dependent: :destroy

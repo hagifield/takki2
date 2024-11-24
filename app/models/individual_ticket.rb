@@ -1,5 +1,5 @@
 class IndividualTicket < ApplicationRecord
-  # 親チケット（イベントチケット）との関連付け
+  # 親チケット(個別チケット)との関連付け
   belongs_to :ticket
 
   # 所有者（ユーザー）との関連付け
@@ -11,7 +11,7 @@ class IndividualTicket < ApplicationRecord
   # バリデーション
   validates :serial_number, presence: true, uniqueness: { scope: :ticket_id } # 同じ親チケット内で一意
 
-  # メソッド: 状態を変更する便利メソッド
+  # メソッド: 状態を変更する
   def mark_as_used
     update!(status: :used)
   end

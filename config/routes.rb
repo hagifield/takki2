@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   devise_for :admins, controllers: {
   registrations: "admin/registrations",
   sessions: "admin/sessions"
@@ -47,6 +47,13 @@ Rails.application.routes.draw do
       resources :comments, only: [:create, :destroy] # チケットに対するコメント
     end
     
+    # IndividualTickets
+    resources :individual_tickets, only: [:index, :show, :update] do
+      member do
+        patch :transfer # チケット譲渡用
+        patch :mark_as_used # チケットを使用済みにする
+      end
+    end
     
     # Notifications
     resources :notifications, only: [:index, :show, :destroy]

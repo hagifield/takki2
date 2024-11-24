@@ -1,4 +1,4 @@
-class TicketsController < ApplicationController
+class Public::TicketsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy] # ユーザー認証を必須にする
   before_action :set_ticket, only: [:show, :edit, :update, :destroy]
   before_action :ensure_issuer, only: [:edit, :update, :destroy]

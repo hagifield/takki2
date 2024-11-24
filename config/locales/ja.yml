@@ -1,6 +1,6 @@
 ja:
   enums:
-    ticket:
+    individual_ticket:
       status:
         unused: "未使用"
         used: "使用済み"

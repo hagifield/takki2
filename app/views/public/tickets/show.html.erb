@@ -3,7 +3,10 @@
 <div class="card">
   <div class="card-body">
     <!-- チケット名 -->
-    <h2><%= @ticket.name %></h2>
+    <h2>チケット名：<%= @ticket.name %></h2>
+    
+    <!-- チケット発行者 -->
+    <h4>チケット発行者：<%= @ticket.issuer.name %></h4>
 
     <!-- チケット説明 -->
     <% if @ticket.description.present? %>
@@ -19,6 +22,20 @@
 
     <!-- 枚数 -->
     <p><strong>枚数:</strong> <%= @ticket.quantity %></p>
+    
+    <!-- チケットを取得するボタン -->
+    <% if @ticket.issuer_id != current_user.id %>
+      <% if @ticket.individual_tickets.where(owner: nil).exists? %>
+        <%= form_with url: acquire_individual_tickets_path, method: :post, local: true do |f| %>
+          <%= f.hidden_field :ticket_id, value: @ticket.id %>
+          <%= f.submit "チケットを取得する", class: "btn btn-primary" %>
+        <% end %>
+      <% else %>
+        <p>このチケットはすべて取得されました。</p>
+      <% end %>
+    <% elsif @ticket.issuer_id == current_user.id %>
+      <p>ご自身で発行されたチケットは取得できません</p>
+    <% end %>
 
     <!-- ステータス -->
     <% if @ticket.issuer_id == current_user.id %>
@@ -32,9 +49,11 @@
     <% end %>
 
     <!-- 受取人 -->
-    <p><strong>受取人:</strong> 
-      <%= @ticket.recipient ? @ticket.recipient.name : "指定なし" %>
-    </p>
+    <% if @ticket.issuer_id == current_user.id %>
+      <p><strong>受取人:</strong> 
+        <%= @ticket.recipient ? @ticket.recipient.name : "指定なし" %>
+      </p>
+    <% end %> 
     
     <% if @ticket.issuer_id == current_user.id %>
       <%= link_to "編集する", edit_ticket_path(@ticket) %>

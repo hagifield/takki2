@@ -30,6 +30,11 @@ class Ticket < ApplicationRecord
 
   # デフォルト値を設定
   after_initialize :set_default_status, if: :new_record?
+  
+  # 残り枚数を計算するメソッド
+  def remaining_tickets
+    individual_tickets.where(owner: nil).count
+  end
 
   private
 

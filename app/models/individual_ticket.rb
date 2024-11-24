@@ -19,4 +19,8 @@ class IndividualTicket < ApplicationRecord
   def mark_as_expired
     update!(status: :expired)
   end
+  
+  def localized_status
+    I18n.t("enums.individual_ticket.status.#{status}")
+  end
 end

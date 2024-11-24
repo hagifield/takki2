@@ -7,7 +7,10 @@
         <div class="card h-100">
           <!-- カードヘッダー -->
           <div class="card-header">
-            <h5 class="card-title"><%= ticket.name %></h5>
+            <h5 class="card-title">
+              チケット名:<%= ticket.name %></br>
+              発行者：<%= ticket.issuer.name %>
+            </h5>
           </div>
 
           <!-- カードボディ -->
@@ -27,8 +30,7 @@
 
             <!-- 残り枚数 -->
             <p class="card-text">
-              <strong>残り枚数:</strong>
-              <!--<%= ticket.quantity - ticket.ownerships.count %>/<%= ticket.quantity %>-->
+              <%= ticket.remaining_tickets %>/<%= ticket.quantity %>
             </p>
           </div>
 

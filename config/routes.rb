@@ -49,6 +49,10 @@ Rails.application.routes.draw do
     
     # IndividualTickets
     resources :individual_tickets, only: [:index, :show, :update] do
+      collection do
+        post :acquire # チケットを取得する
+      end
+      
       member do
         patch :transfer # チケット譲渡用
         patch :mark_as_used # チケットを使用済みにする

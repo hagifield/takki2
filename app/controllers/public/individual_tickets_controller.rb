@@ -2,11 +2,16 @@ class Public::IndividualTicketsController < ApplicationController
   before_action :set_individual_ticket, only: [:show, :update, :mark_as_used, :transfer]
 
   def index
-    @individual_tickets = current_user.owned_individual_tickets
+    @individual_tickets = IndividualTicket.includes(:ticket)
   end
 
   def show
     #メソッド内で@individual_ticketを設定済み
+    
+    # 所有者または発行者であることを確認
+    unless @individual_ticket.owner == current_user || @individual_ticket.ticket.issuer == current_user
+      redirect_to individual_tickets_path, alert: "このチケットにアクセスする権限がありません。"
+    end
     @ticket = @individual_ticket.ticket
   end
 

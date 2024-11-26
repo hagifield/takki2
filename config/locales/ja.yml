@@ -1,9 +1,14 @@
 ja:
   enums:
+    request:
+      status:
+        pending: "使用許可待ち"
+        approved: "承認済"
+        rejectied: "チケット使用の承認が拒否されました"
     individual_ticket:
       status:
         unused: "未使用"
-        used: "使用済み"
+        used: "使用済み（使用リクエストが承認されました）"
         unusable: "使用不可"
   activerecord:
     errors:

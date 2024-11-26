@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_24_084252) do
+ActiveRecord::Schema.define(version: 2024_11_25_151941) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -118,6 +118,16 @@ ActiveRecord::Schema.define(version: 2024_11_24_084252) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "requests", force: :cascade do |t|
+    t.integer "individual_ticket_id", null: false
+    t.integer "owner_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["individual_ticket_id"], name: "index_requests_on_individual_ticket_id"
+    t.index ["owner_id"], name: "index_requests_on_owner_id"
+  end
+
   create_table "tickets", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "issuer_id", null: false
@@ -152,4 +162,6 @@ ActiveRecord::Schema.define(version: 2024_11_24_084252) do
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "requests", "individual_tickets"
+  add_foreign_key "requests", "users", column: "owner_id"
 end

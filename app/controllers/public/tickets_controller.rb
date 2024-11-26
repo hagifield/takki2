@@ -1,6 +1,6 @@
 class Public::TicketsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy] # ユーザー認証を必須にする
-  before_action :set_ticket, only: [:show, :edit, :update, :destroy]
+  before_action :set_ticket, only: [:show, :edit, :update, :destroy, :individual_tickets]
   before_action :ensure_issuer, only: [:edit, :update, :destroy]
 
   # 新規チケット作成フォーム
@@ -72,6 +72,18 @@ class Public::TicketsController < ApplicationController
       @tickets = @user.issued_tickets.order(created_at: :desc)
     end
   end
+  
+  # 発行済個別チケット一覧
+  def individual_tickets
+    #@ticketはset_ticketで設定済
+    unless @ticket.issuer == current_user
+      redirect_to root_path, alert: "このページにアクセスする権限がありません。"
+      return
+    end
+
+    @individual_tickets = @ticket.individual_tickets.includes(:owner, :requests)
+  end
+
 
   private
 

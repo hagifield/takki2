@@ -1,0 +1,39 @@
+<h1><%= @ticket.name %>の発行済個別チケット一覧</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>シリアルナンバー</th>
+      <th>状態</th>
+      <th>所有者</th>
+      <th>使用リクエスト状態</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @individual_tickets.each do |individual_ticket| %>
+      <tr>
+        <td><%= individual_ticket.serial_number %></td>
+        <td><%= individual_ticket.localized_status %></td>
+        <td><%= individual_ticket.owner ? individual_ticket.owner.name : "未割り当て" %></td>
+
+        <% if individual_ticket.requests.any? %>
+          <td><%= individual_ticket.requests.last.localized_status %></td>
+          <% if individual_ticket.requests.last.pending? %>
+            <td>
+              <%= button_to "承認する", request_path(individual_ticket.requests.last, status: :approved), method: :patch, class: "btn btn-success" %>
+              <%= button_to "拒否する", request_path(individual_ticket.requests.last, status: :rejected), method: :patch, class: "btn btn-danger" %>
+            </td>
+          <% else %>
+            <td>-</td>
+          <% end %>
+        <% else %>
+          <td>リクエストなし</td>
+          <td>-</td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "戻る", ticket_path(@ticket), class: "btn btn-secondary" %>

@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     # Tickets
     get 'tickets/users/:id', to: 'tickets#my_tickets', as: 'user_tickets' # 自分の所持しているチケット一覧
     get 'tickets/issued_tickets/:user_id', to: 'tickets#issued_tickets', as: 'user_issued_tickets' # ユーザーの発行したチケット一覧。パスの最後はユーザーIDを受け取る。
+    get 'tickets/:id/individual_tickets', to: 'tickets#individual_tickets', as: 'issued_individual_tickets'# ユーザーの発行したチケットの個別チケット一覧。
     resources :tickets do
       member do
         get 'transfer'
@@ -58,6 +59,9 @@ Rails.application.routes.draw do
         patch :mark_as_used # チケットを使用済みにする
       end
     end
+    
+    # Requests
+    resources :requests, only: [:create, :update]
     
     # Notifications
     resources :notifications, only: [:index, :show, :destroy]

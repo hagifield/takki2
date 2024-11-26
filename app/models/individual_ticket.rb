@@ -4,6 +4,9 @@ class IndividualTicket < ApplicationRecord
 
   # 所有者（ユーザー）との関連付け
   belongs_to :owner, class_name: "User", optional: true
+  
+  # 使用リクエストとの関連付け
+  has_many :requests, dependent: :destroy
 
   # 個別チケットの状態をenumで管理
   enum status: { unused: 0, used: 1, expired: 2 }

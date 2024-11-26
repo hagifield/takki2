@@ -7,7 +7,13 @@
 
     <!-- 状態 -->
     <p><strong>状態:</strong> <%= t("enums.individual_ticket.status.#{@individual_ticket.status}") %></p>
-
+    
+    <!-- 発行者 -->
+    <p>
+      <strong>発行者：</strong>
+      <%= @individual_ticket.ticket.issuer.name %>
+    </p>
+    
     <!-- 所有者 -->
     <p>
       <strong>所有者:</strong>
@@ -29,7 +35,23 @@
 
     <!-- 所有者向けのアクション -->
     <% if @individual_ticket.owner == current_user %>
-      <%= link_to "使用済みにする", mark_as_used_individual_ticket_path(@individual_ticket), method: :patch, class: "btn btn-success", data: { confirm: "本当にこのチケットを使用済みにしますか？" } %>
+      <!-- 使用リクエストを送信 -->
+      <%= button_to "使用する", requests_path(individual_ticket_id: @individual_ticket.id), method: :post, class: "btn btn-primary" %>
+    <% end %>
+    
+    <!-- 発行者向けのアクション -->
+    <% if @individual_ticket.ticket.issuer == current_user %>
+      <h4>使用リクエスト一覧</h4>
+      <% @individual_ticket.requests.each do |request| %>
+        <p>
+          所有者: <%= request.owner.name %><br>
+          状態: <%= request.localized_status %>
+        </p>
+        <% if request.pending? %>
+          <%= button_to "承認する", request_path(request, status: :approved), method: :patch, class: "btn btn-success" %>
+          <%= button_to "拒否する", request_path(request, status: :rejected), method: :patch, class: "btn btn-danger" %>
+        <% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

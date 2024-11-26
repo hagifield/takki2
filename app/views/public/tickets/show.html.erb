@@ -55,6 +55,11 @@
       </p>
     <% end %> 
     
+    <!-- 発行者向け　個別チケット一覧へのリンク -->
+    <% if @ticket.issuer == current_user %>
+      <%= link_to "発行済個別チケット一覧", issued_individual_tickets_path(@ticket), class: "btn btn-info" %>
+    <% end %>
+    
     <% if @ticket.issuer_id == current_user.id %>
       <%= link_to "編集する", edit_ticket_path(@ticket) %>
       <%= button_to "削除する", ticket_path(@ticket), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>

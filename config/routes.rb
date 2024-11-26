@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     get 'mypage', to: 'users#mypage'
     resources :users, only: [:index, :show, :edit, :update, :destroy] do
       member do
+        post 'follow'
+        delete 'unfollow'
         get 'followers'
         get 'followings'
       end

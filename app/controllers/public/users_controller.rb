@@ -29,14 +29,23 @@ class Public::UsersController < ApplicationController
     @users = User.page(params[:page]).per(30)
   end
   
-  #フォロワー一覧
+  # Userモデル内のfollowメソッドを呼び出して指定のユーザーをフォロー
+  def follow
+    current_user.follow(@user)
+    redirect_to user_path(@user), notice: "#{@user.name}さんをフォローしました"
+  end
+  # Userモデル内のunfollowメソッドを呼び出してフォロー解除
+  def unfollow
+    current_user.unfollow(@user)
+    redirect_to user_path(@user), notice: "#{@user.name}さんのフォローを解除しました"
+  end
+  #　フォローしているユーザー一覧
+  def followings
+    @followings = @user.followings
+  end
+  #　フォロワー一覧
   def followers
     @followers = @user.followers
-  end
-  
-  #フォロー一覧
-  def followings
-    @followings_users = @user.followings
   end
 
   def destroy

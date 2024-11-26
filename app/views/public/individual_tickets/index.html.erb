@@ -1,0 +1,27 @@
+<h1>所有チケット一覧</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>チケット名</th>
+      <th>発行者</th>
+      <th>詳細リンク</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @individual_tickets.each do |individual_ticket| %>
+      <tr>
+        <!-- チケット名 -->
+        <td><%= individual_ticket.ticket.name %></td>
+
+        <!-- チケット発行者名 -->
+        <td><%= individual_ticket.ticket.issuer.name %></td>
+
+        <!-- チケット詳細画面へのリンク -->
+        <td>
+          <%= link_to "詳細を見る", individual_ticket_path(individual_ticket), class: "btn btn-info" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

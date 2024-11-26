@@ -1,2 +1,70 @@
-<h1>Public::Tickets#show</h1>
-<p>Find me in app/views/public/tickets/show.html.erb</p>
+<h1>チケット詳細</h1>
+
+<div class="card">
+  <div class="card-body">
+    <!-- チケット名 -->
+    <h2>チケット名：<%= @ticket.name %></h2>
+    
+    <!-- チケット発行者 -->
+    <h4>チケット発行者：<%= @ticket.issuer.name %></h4>
+
+    <!-- チケット説明 -->
+    <% if @ticket.description.present? %>
+      <p><strong>説明:</strong> <%= @ticket.description %></p>
+    <% else %>
+      <p><strong>説明:</strong> 記載なし</p>
+    <% end %>
+
+    <!-- 有効期限 -->
+    <p><strong>有効期限:</strong> 
+      <%= @ticket.expiration_date ? @ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+    </p>
+
+    <!-- 枚数 -->
+    <p><strong>枚数:</strong> <%= @ticket.quantity %></p>
+    
+    <!-- チケットを取得するボタン -->
+    <% if @ticket.issuer_id != current_user.id %>
+      <% if @ticket.individual_tickets.where(owner: nil).exists? %>
+        <%= form_with url: acquire_individual_tickets_path, method: :post, local: true do |f| %>
+          <%= f.hidden_field :ticket_id, value: @ticket.id %>
+          <%= f.submit "チケットを取得する", class: "btn btn-primary" %>
+        <% end %>
+      <% else %>
+        <p>このチケットはすべて取得されました。</p>
+      <% end %>
+    <% elsif @ticket.issuer_id == current_user.id %>
+      <p>ご自身で発行されたチケットは取得できません</p>
+    <% end %>
+
+    <!-- ステータス -->
+    <% if @ticket.issuer_id == current_user.id %>
+      <p><strong>ステータス:</strong> 
+        <% if @ticket.private %>
+          <span class="badge bg-warning">プライベート（非公開）</span>
+        <% else %>
+          <span class="badge bg-success">公開</span>
+        <% end %>
+      </p>
+    <% end %>
+
+    <!-- 受取人 -->
+    <% if @ticket.issuer_id == current_user.id %>
+      <p><strong>受取人:</strong> 
+        <%= @ticket.recipient ? @ticket.recipient.name : "指定なし" %>
+      </p>
+    <% end %> 
+    
+    <!-- 発行者向け　個別チケット一覧へのリンク -->
+    <% if @ticket.issuer == current_user %>
+      <%= link_to "発行済個別チケット一覧", issued_individual_tickets_path(@ticket), class: "btn btn-info" %>
+    <% end %>
+    
+    <% if @ticket.issuer_id == current_user.id %>
+      <%= link_to "編集する", edit_ticket_path(@ticket) %>
+      <%= button_to "削除する", ticket_path(@ticket), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "チケット一覧へ戻る", tickets_path, class: "btn btn-secondary mt-3" %>

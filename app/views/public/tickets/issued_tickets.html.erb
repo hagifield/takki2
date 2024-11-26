@@ -1,4 +1,4 @@
-<h1>チケット一覧</h1>
+<h1><%= @user.name %> さんが発行したチケット一覧</h1>
 
 <% if @tickets.any? %>
   <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -7,10 +7,7 @@
         <div class="card h-100">
           <!-- カードヘッダー -->
           <div class="card-header">
-            <h5 class="card-title">
-              チケット名:<%= ticket.name %></br>
-              発行者：<%= ticket.issuer.name %>
-            </h5>
+            <h5 class="card-title"><%= ticket.name %></h5>
           </div>
 
           <!-- カードボディ -->
@@ -27,11 +24,6 @@
               <strong>有効期限:</strong>
               <%= ticket.expiration_date ? ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
             </p>
-
-            <!-- 残り枚数 -->
-            <p class="card-text">
-              <%= ticket.remaining_tickets %>/<%= ticket.quantity %>
-            </p>
           </div>
 
           <!-- カードフッター -->
@@ -43,5 +35,7 @@
     <% end %>
   </div>
 <% else %>
-  <p>現在、公開されているチケットはありません。</p>
+  <p>公開されているチケットはありません。</p>
 <% end %>
+
+<%= link_to "戻る", tickets_path, class: "btn btn-secondary mt-3" %>

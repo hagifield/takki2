@@ -1,27 +1,18 @@
 class Ticket < ApplicationRecord
-    
-#チケットステータスのenum設定
-  enum status: { unused: 0, used: 1, unusable: 2 }
-  
-  #バリデーション
-  with_options presence: true do
-    validates :name
-    validates :description
-    validates :expiration_date
-    validates :quantity
-    validates :available_quantity
-    validates :status
-  end
-  
-  # 所有権モデルとの関連付け
-  has_many :ownerships, dependent: :destroy
-  # チケットの所有者を取得
-  has_many :owners, through: :ownerships, source: :user
+  # ステータスをenumで設定
+  enum status: { active: 0, inactive: 1 }
 
-  # 投稿モデルとの関連付け: チケットは投稿に含まれる
+  # 発行者と受取人の関連付け
+  belongs_to :issuer, class_name: "User", foreign_key: "issuer_id"
+  belongs_to :recipient, class_name: "User", foreign_key: "recipient_id", optional: true
+
+  # 個別チケットモデルとの関連付け
+  has_many :individual_tickets, dependent: :destroy
+
+  # 投稿モデルとの関連付け
   belongs_to :post, optional: true
 
-  # Active Storage設定: チケットのQRコード
+  # Active Storage設定
   has_one_attached :qr_code
 
   # いいね機能の設定
@@ -29,7 +20,25 @@ class Ticket < ApplicationRecord
 
   # チケットに対するコメント
   has_many :comments, as: :commentable, dependent: :destroy
-  
+
   # 通知とのポリモーフィック関連付け
   has_many :notifications, as: :notifiable, dependent: :destroy
+
+  # バリデーション
+  validates :name, presence: true
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+
+  # デフォルト値を設定
+  after_initialize :set_default_status, if: :new_record?
+  
+  # 残り枚数を計算するメソッド
+  def remaining_tickets
+    individual_tickets.where(owner: nil).count
+  end
+
+  private
+
+  def set_default_status
+    self.status ||= :active # デフォルトで「active」に設定
+  end
 end

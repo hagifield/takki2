@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_01_112517) do
+ActiveRecord::Schema.define(version: 2024_11_25_151941) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -70,6 +70,18 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
   end
 
+  create_table "individual_tickets", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.bigint "owner_id"
+    t.string "serial_number", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_individual_tickets_on_owner_id"
+    t.index ["serial_number", "ticket_id"], name: "index_individual_tickets_on_serial_and_ticket", unique: true
+    t.index ["ticket_id"], name: "index_individual_tickets_on_ticket_id"
+  end
+
   create_table "likes", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "likable_type", null: false
@@ -90,13 +102,6 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
   end
 
-  create_table "ownerships", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "ticket_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "posts", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "text_content", null: false
@@ -113,15 +118,26 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "requests", force: :cascade do |t|
+    t.integer "individual_ticket_id", null: false
+    t.integer "owner_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["individual_ticket_id"], name: "index_requests_on_individual_ticket_id"
+    t.index ["owner_id"], name: "index_requests_on_owner_id"
+  end
+
   create_table "tickets", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "issuer_id", null: false
-    t.bigint "recipient_id", null: false
-    t.text "description", null: false
-    t.date "expiration_date", null: false
+    t.bigint "recipient_id"
+    t.integer "post_id"
+    t.text "description"
+    t.date "expiration_date"
     t.integer "quantity", null: false
-    t.integer "available_quantity", null: false
     t.integer "status", default: 0, null: false
+    t.boolean "private", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -146,4 +162,6 @@ ActiveRecord::Schema.define(version: 2024_11_01_112517) do
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "requests", "individual_tickets"
+  add_foreign_key "requests", "users", column: "owner_id"
 end

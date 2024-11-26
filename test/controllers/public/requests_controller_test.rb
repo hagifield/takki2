@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Public::OwnershipsControllerTest < ActionDispatch::IntegrationTest
+class Public::RequestsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

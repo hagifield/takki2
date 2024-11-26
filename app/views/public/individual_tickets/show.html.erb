@@ -1,0 +1,59 @@
+<h1>個別チケット詳細</h1>
+
+<div class="card">
+  <div class="card-body">
+    <!-- シリアルナンバー -->
+    <h3>シリアルナンバー: <%= @individual_ticket.serial_number %></h3>
+
+    <!-- 状態 -->
+    <p><strong>状態:</strong> <%= t("enums.individual_ticket.status.#{@individual_ticket.status}") %></p>
+    
+    <!-- 発行者 -->
+    <p>
+      <strong>発行者：</strong>
+      <%= @individual_ticket.ticket.issuer.name %>
+    </p>
+    
+    <!-- 所有者 -->
+    <p>
+      <strong>所有者:</strong>
+      <%= @individual_ticket.owner ? @individual_ticket.owner.name : "未割り当て" %>
+    </p>
+
+    <!-- 親チケット情報 -->
+    <h4>チケット情報</h4>
+    <ul>
+      <li><strong>チケット名:</strong> <%= @individual_ticket.ticket.name %></li>
+      <li><strong>説明:</strong> <%= @individual_ticket.ticket.description %></li>
+      <li><strong>有効期限:</strong> <%= @individual_ticket.ticket.expiration_date || "指定なし" %></li>
+    </ul>
+
+    <!-- 発行者向けのメッセージ -->
+    <% if @individual_ticket.ticket.issuer == current_user %>
+      <p>※あなたはこのチケットの発行者です。</p>
+    <% end %>
+
+    <!-- 所有者向けのアクション -->
+    <% if @individual_ticket.owner == current_user %>
+      <!-- 使用リクエストを送信 -->
+      <%= button_to "使用する", requests_path(individual_ticket_id: @individual_ticket.id), method: :post, class: "btn btn-primary" %>
+    <% end %>
+    
+    <!-- 発行者向けのアクション -->
+    <% if @individual_ticket.ticket.issuer == current_user %>
+      <h4>使用リクエスト一覧</h4>
+      <% @individual_ticket.requests.each do |request| %>
+        <p>
+          所有者: <%= request.owner.name %><br>
+          状態: <%= request.localized_status %>
+        </p>
+        <% if request.pending? %>
+          <%= button_to "承認する", request_path(request, status: :approved), method: :patch, class: "btn btn-success" %>
+          <%= button_to "拒否する", request_path(request, status: :rejected), method: :patch, class: "btn btn-danger" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "戻る", individual_tickets_path, class: "btn btn-secondary" %>

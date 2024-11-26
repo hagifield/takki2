@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   devise_for :admins, controllers: {
   registrations: "admin/registrations",
   sessions: "admin/sessions"
@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
+  
+  
   # Public側
   scope module: :public do
     # Homes
@@ -37,7 +39,8 @@ Rails.application.routes.draw do
 
     # Tickets
     get 'tickets/users/:id', to: 'tickets#my_tickets', as: 'user_tickets' # 自分の所持しているチケット一覧
-    get 'tickets/users/:id/issued', to: 'tickets#my_issued_tickets', as: 'user_issued_tickets' # 自分の発行したチケット一覧
+    get 'tickets/issued_tickets/:user_id', to: 'tickets#issued_tickets', as: 'user_issued_tickets' # ユーザーの発行したチケット一覧。パスの最後はユーザーIDを受け取る。
+    get 'tickets/:id/individual_tickets', to: 'tickets#individual_tickets', as: 'issued_individual_tickets'# ユーザーの発行したチケットの個別チケット一覧。
     resources :tickets do
       member do
         get 'transfer'
@@ -45,6 +48,20 @@ Rails.application.routes.draw do
       resources :comments, only: [:create, :destroy] # チケットに対するコメント
     end
     
+    # IndividualTickets
+    resources :individual_tickets, only: [:index, :show, :update] do
+      collection do
+        post :acquire # チケットを取得する
+      end
+      
+      member do
+        patch :transfer # チケット譲渡用
+        patch :mark_as_used # チケットを使用済みにする
+      end
+    end
+    
+    # Requests
+    resources :requests, only: [:create, :update]
     
     # Notifications
     resources :notifications, only: [:index, :show, :destroy]
@@ -55,8 +72,6 @@ Rails.application.routes.draw do
     get 'users/:id/likes/posts', to: 'likes#index_posts', as: 'user_post_likes'
     get 'users/:id/likes/tickets', to: 'likes#index_tickets', as: 'user_ticket_likes'
 
-    # Ownerships
-    resources :ownerships, only: [:create, :destroy]
 
     # Relationships (follows/unfollows)
     resources :relationships, only: [:create, :destroy]

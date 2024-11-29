@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       collection do
         get 'likes', to: 'posts#like_index'
       end
+      resource :like, only: [:create, :destroy] # 投稿ごとのいいね
       resources :comments, only: [:create, :destroy] # ポストに対するコメント
     end
 
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
       member do
         get 'transfer'
       end
+      resource :like, only: [:create, :destroy] # チケットごとのいいね
       resources :comments, only: [:create, :destroy] # チケットに対するコメント
     end
     
@@ -69,8 +71,6 @@ Rails.application.routes.draw do
     resources :notifications, only: [:index, :show, :destroy]
 
     # Likes
-    resources :likes, only: [:create, :destroy] do
-    end
     get 'users/:id/likes/posts', to: 'likes#index_posts', as: 'user_post_likes'
     get 'users/:id/likes/tickets', to: 'likes#index_tickets', as: 'user_ticket_likes'
 

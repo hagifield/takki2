@@ -38,6 +38,13 @@
           <div class="card-footer text-center">
             <%= link_to "詳細を見る", ticket_path(ticket), class: "btn btn-primary" %>
           </div>
+          
+          <% if ticket.likes.exists?(user: current_user) %>
+            <%= button_to 'いいね解除', ticket_like_path(ticket), method: :delete, class: 'btn btn-danger' %>
+          <% else %>
+            <%= button_to 'いいね', ticket_like_path(ticket), method: :post, class: 'btn btn-primary' %>
+          <% end %>
+          <p>♡<%= ticket.likes.count %></p>
         </div>
       </div>
     <% end %>

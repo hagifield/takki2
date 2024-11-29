@@ -1,2 +1,36 @@
-<h1>Public::Likes#index_tickets</h1>
-<p>Find me in app/views/public/likes/index_tickets.html.erb</p>
+<h1><%= @user.name %>さんがいいねしたチケット</h1>
+
+<% if @likes.any? %>
+  <% @likes.each do |like| %>
+    <% ticket = like.likable %> <!-- ポリモーフィック関連でTicketを取得 -->
+
+    <div class="ticket-like">
+      <%= link_to ticket_path(ticket) do %>
+        <!-- ユーザー画像 -->
+        <div>
+          <%= image_tag ticket.issuer.profile_image.variant(resize: "50x50"), alt: "#{ticket.issuer.name}の画像", class: "user-image" if ticket.issuer.profile_image.attached? %>
+        </div>
+        <!-- ユーザー名 -->
+        <p><strong>発行者:</strong> <%= ticket.issuer.name %></p>
+        <!-- チケットタイトル -->
+        <p><strong>チケット名:</strong> <%= ticket.name %></p>
+        <!-- チケット説明 -->
+        <p><strong>説明:</strong> <%= ticket.description %></p>
+        <!-- チケット有効期限 -->
+        <p><strong>有効期限:</strong> <%= ticket.expiration_date %></p>
+        <!-- チケット残り枚数 -->
+        <p>
+          <strong>残り枚数:</strong> <%= ticket.remaining_tickets %> / <%= ticket.quantity %>
+          <% if ticket.remaining_tickets == 0 %>
+            <span style="color: red; font-size: small;">(完売しました)</span>
+          <% end %>
+        </p>
+        <p>♡<%= ticket.likes.count %></p>
+        <!-- チケット詳細へのリンク -->
+        <p><strong>チケット詳細へ</strong></p>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <p>いいねしたチケットがありません。</p>
+<% end %>

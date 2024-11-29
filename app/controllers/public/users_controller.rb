@@ -41,10 +41,12 @@ class Public::UsersController < ApplicationController
   end
   #　フォローしているユーザー一覧
   def followings
+    @users = @user.followings
     @followings = @user.followings
   end
   #　フォロワー一覧
   def followers
+    @users = @user.followers
     @followers = @user.followers
   end
 

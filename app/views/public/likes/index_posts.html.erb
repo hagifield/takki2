@@ -1,2 +1,48 @@
-<h1>Public::Likes#index_posts</h1>
-<p>Find me in app/views/public/likes/index_posts.html.erb</p>
+<h1><%= @user.name %>さんがいいねした投稿</h1>
+
+<% if @likes.any? %>
+  <% @likes.each do |like| %>
+    <% post = like.likable %> <!-- ポリモーフィック関連でPostを取得 -->
+
+    <div class="post-like">
+      <%= link_to post_path(post) do %>
+        <!-- ユーザー画像 -->
+        <div>
+          <% if post.user.profile_image.attached? %>
+            <%= image_tag post.user.profile_image,size: "50x50", class: "avatar" %>
+          <% else %>
+            <%= image_tag "no-image.jpeg",size: "50x50", class: "avatar" %>
+          <% end %>
+        </div>
+        <!-- ユーザー名 -->
+        <p><strong>投稿者:</strong> <%= post.user.name %></p>
+        <!-- 投稿テキスト -->
+        <p><strong>投稿内容:</strong> <%= post.text_content %></p>
+        <!-- 投稿画像 -->
+        <% if post.images.attached? %>
+          <div>
+            <% post.images.each do |image| %>
+              <%= image_tag image,size: "150x150", class: "post-image" %>
+            <% end %>
+          </div>
+        <% end %>
+        <!-- 投稿チケット -->
+        <% if post.tickets.present? %>
+          <div class="post-tickets">
+            <strong>関連チケット:</strong>
+            <ul>
+              <% post.tickets.each do |ticket| %>
+                <li><%= ticket.name %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <p>♡<%= post.likes.count %></p>
+        <!-- 投稿詳細へのリンク -->
+        <p><strong>投稿詳細へ</strong></p>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <p>いいねした投稿がありません。</p>
+<% end %>

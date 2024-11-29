@@ -1,2 +1,17 @@
-<h1>Public::Users#followed</h1>
-<p>Find me in app/views/public/users/followed.html.erb</p>
+<h1><%= @user.name %> さんがフォローしているユーザー</h1>
+<ul>
+  <% @users.each do |user| %>
+    <%= link_to user_path(user.id) do %>
+      <li>
+        <%= user.name %>
+        <% if user == current_user %>
+          <%= link_to "マイページ", mypage_path, class: "btn btn-secondary" %>
+        <% elsif current_user.following?(user) %>
+          <%= button_to "フォロー解除", relationship_path(user), method: :delete, class: "btn btn-danger" %>
+        <% else %>
+          <%= button_to "フォローする", relationships_path(followed_id: user.id), method: :post, class: "btn btn-primary" %>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

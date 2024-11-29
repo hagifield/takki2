@@ -75,7 +75,7 @@ class Public::PostsController < ApplicationController
   
   # 発行済みかつ未使用のチケットを取得
   def set_tickets
-    @tickets = current_user.issued_tickets.unused
+    @tickets = current_user.issued_tickets.where(status: 0)
   end
 
   

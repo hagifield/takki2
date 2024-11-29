@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 2024_11_25_151941) do
     t.integer "notifiable_id", null: false
     t.string "notifiable_type", null: false
     t.datetime "read_at"
+    t.string "action_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"

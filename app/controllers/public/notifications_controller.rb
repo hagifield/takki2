@@ -10,6 +10,11 @@ class Public::NotificationsController < ApplicationController
   def show
     @notification = current_user.notifications.find(params[:id])
     @notification.mark_as_read
+    
+    # Requestオブジェクトの場合、専用のパスにリダイレクト　→ ビュー内で分岐させた
+    # if @notification.notifiable.is_a?(Request)
+    #   redirect_to issued_individual_tickets_path(@notification.notifiable.individual_ticket.ticket_id)
+    # end
   end
 
   # 通知を削除

@@ -35,8 +35,14 @@
 
     <!-- 所有者向けのアクション -->
     <% if @individual_ticket.owner == current_user %>
-      <!-- 使用リクエストを送信 -->
-      <%= button_to "使用する", requests_path(individual_ticket_id: @individual_ticket.id), method: :post, class: "btn btn-primary" %>
+      <% if @individual_ticket.requests.any? && @individual_ticket.requests.last.status == "pending" %>
+        <p>使用リクエスト承認待ちです。</p>
+      <% elsif @individual_ticket.requests.any? && @individual_ticket.requests.last.status == "approved" %>
+        <p>使用済チケットです</p>
+      <% else %>
+        <!-- 使用リクエストを送信 -->
+        <%= button_to "使用する", requests_path(individual_ticket_id: @individual_ticket.id), method: :post, class: "btn btn-primary" %>
+      <% end %>
     <% end %>
     
     <!-- 発行者向けのアクション -->

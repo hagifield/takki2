@@ -2,7 +2,7 @@ class Public::IndividualTicketsController < ApplicationController
   before_action :set_individual_ticket, only: [:show, :update, :mark_as_used, :transfer]
 
   def index
-    @individual_tickets = IndividualTicket.includes(:ticket)
+    @individual_tickets = current_user.owned_individual_tickets
   end
 
   def show

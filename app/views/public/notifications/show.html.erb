@@ -2,7 +2,7 @@
 
 <div class="notification-detail">
   <p><strong>通知内容:</strong> <%= @notification.message %></p>
-  <p><strong>通知の種類:</strong> <%= @notification.action_type.humanize %></p>
+  <p><strong>通知の種類:</strong> <%= t("notifications.action_types.#{@notification.action_type}", default: "不明な通知") %></p>
   <p><strong>送信日時:</strong> <%= @notification.created_at.strftime('%Y-%m-%d %H:%M:%S') %></p>
 
   <% if @notification.read_at.present? %>
@@ -14,7 +14,19 @@
   <p>
     <strong>関連リソース:</strong> 
     <% if @notification.notifiable.present? %>
-      <%= link_to '詳細を確認', polymorphic_path(@notification.notifiable) %>
+      
+      <% if @notification.action_type == 'ticket_use_request' %>
+        <!-- 使用リクエスト通知: 発行者がリクエスト一覧にアクセス -->
+        <%= link_to 'リクエスト一覧を確認', issued_individual_tickets_path(@notification.notifiable.individual_ticket.ticket_id) %>
+
+      <% elsif @notification.action_type == 'ticket_use_approved' || @notification.action_type == 'ticket_use_rejected' %>
+        <!-- 承認・拒否通知: 個別チケット詳細ページへ -->
+        <%= link_to 'チケット詳細を確認', individual_ticket_path(@notification.notifiable.individual_ticket) %>
+
+      <% else %>
+        <!-- それ以外の通知 -->
+        <%= link_to '詳細を確認', polymorphic_path(@notification.notifiable) %>
+      <% end %>
     <% else %>
       この通知に関連するリソースは削除されています。
     <% end %>

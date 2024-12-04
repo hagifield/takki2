@@ -28,14 +28,14 @@
    
    <!-- ユーザーのいいねした投稿一覧 -->
    <div class="user-likes-posts">
-     <% link_to user_post_likes_path(@user) do %>
+     <%= link_to user_post_likes_path(@user) do %>
        <p><%= @user.name %>さんがいいねした投稿</p>
      <% end %>
    </div>
    
    <!-- ユーザーのいいねしたチケット一覧 -->
    <div class="user-likes-tickets">
-     <% link_to user_ticket_likes_path(@user) do %>
+     <%= link_to user_ticket_likes_path(@user) do %>
        <p><%= @user.name %>さんがいいねしたチケット</p>
      <% end %>
    </div>

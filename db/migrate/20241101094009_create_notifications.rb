@@ -6,6 +6,7 @@ class CreateNotifications < ActiveRecord::Migration[6.1]
       t.bigint :notifiable_id, null: false
       t.string :notifiable_type, null: false  # bigintをstringに変更
       t.datetime :read_at  # 読まれていない通知も存在させたいため"null: false"は外す
+      t.string :action_type, null: false
       t.timestamps
     end
     

@@ -21,7 +21,7 @@ class Public::UsersController < ApplicationController
   end
 
   def show
-    # 他のユーザーのプロフィールを表示。@userはbefore_actionのset_userで設定済み
+    # @userはbefore_actionのset_userで設定済み
     @posts = @user.posts.order(created_at: :desc) # 投稿を新しい順に並び替え
   end
 

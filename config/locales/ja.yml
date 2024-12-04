@@ -1,4 +1,12 @@
 ja:
+  notifications:
+    action_types:
+      ticket_use_request: "使用リクエスト"
+      ticket_use_approved: "使用リクエスト承認"
+      ticket_use_rejected: "使用リクエスト拒否"
+      follow: "フォロー"
+      like: "いいね"
+      comment: "コメント"
   enums:
     request:
       status:

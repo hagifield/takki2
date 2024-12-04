@@ -69,6 +69,15 @@ class User < ApplicationRecord
     followings.include?(user)
   end
   
+  # 通知作成メソッド
+  def create_notification(notifiable, action_type)
+    notifications.create(
+      notifiable: notifiable,
+      action_type: action_type,
+      read_at: nil
+    )
+  end
+  
   
   private
 

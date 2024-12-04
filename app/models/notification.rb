@@ -13,4 +13,19 @@ class Notification < ApplicationRecord
   def mark_as_read
     update(read_at: Time.current)
   end
+  
+  def self.generate_message(action_type, notifiable)
+    case action_type
+    when 'follow'
+      "#{notifiable.name}さんがあなたをフォローしました"
+    when 'like'
+      "#{notifiable.user.name}さんが「#{notifiable.title}」にいいねしました"
+    when 'comment'
+      "#{notifiable.user.name}さんが「#{notifiable.title}」にコメントしました"
+    when 'ticket_transfer'
+      "#{notifiable.title}のチケットが転送されました"
+    else
+      "新しい通知があります"
+    end
+  end
 end

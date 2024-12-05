@@ -37,8 +37,13 @@ class Public::LikesController < ApplicationController
   private
 
   def set_likable
-    resource, id = request.path.split('/')[1, 2]
-    @likable = resource.singularize.classify.constantize.find(id)
+    if params[:post_id]
+      @likable = Post.find(params[:post_id])
+    elsif params[:ticket_id]
+      @likable = Ticket.find(params[:ticket_id])
+    elsif params[:comment_id]
+      @likable = Comment.find(params[:comment_id])
+    end
   end
 
   # 通知を作成するメソッド
@@ -49,6 +54,9 @@ class Public::LikesController < ApplicationController
     elsif likable.is_a?(Post)
       recipient = likable.user
       title = likable.text_content
+    elsif likable.is_a?(Comment)
+      recipient = likable.user
+      title = likable.content
     else
       return # `likable`が適切なクラスでない場合は通知を作成しない
     end

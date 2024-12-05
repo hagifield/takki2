@@ -37,7 +37,9 @@ Rails.application.routes.draw do
         get 'likes', to: 'posts#like_index'
       end
       resource :like, only: [:create, :destroy] # 投稿ごとのいいね
-      resources :comments, only: [:create, :destroy] # ポストに対するコメント
+      resources :comments, only: [:create, :destroy] do # ポストに対するコメント
+        resource :like, only: [:create, :destroy] # 投稿のコメントに対するいいね
+      end
     end
 
     # Tickets
@@ -49,7 +51,9 @@ Rails.application.routes.draw do
         get 'transfer'
       end
       resource :like, only: [:create, :destroy] # チケットごとのいいね
-      resources :comments, only: [:create, :destroy] # チケットに対するコメント
+      resources :comments, only: [:create, :destroy] do # チケットに対するコメント
+        resource :like, only: [:create, :destroy] # チケットのコメントに対するいいね
+      end
     end
     
     # IndividualTickets

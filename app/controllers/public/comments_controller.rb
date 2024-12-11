@@ -18,7 +18,7 @@ class Public::CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     @commentable = @comment.commentable
     
-    if @commnet.destroy
+    if @comment.destroy
       redirect_to polymorphic_path(@commentable), notice: "コメントを削除しました"
     else
       redirect_back(fallback_location: root_path, alert: "コメントの削除に失敗しました")
@@ -28,7 +28,7 @@ class Public::CommentsController < ApplicationController
   private
   
   def comment_params
-      params.require(:comment).permmit(:content)
+      params.require(:comment).permit(:content)
   end
   
   def find_commentable
@@ -39,10 +39,13 @@ class Public::CommentsController < ApplicationController
     end
   end
   
-  def create_notification(commentable)
+  def create_notification(comment)
+    
+    commentable = comment.commentable
+    
         if commentable.is_a?(Post)
             recipient = commentable.user
-            title = commentable.text.content
+            title = commentable.text_content
         elsif commentable.is_a?(Ticket)
            recipient = commentable.issuer
            title = commentable.name

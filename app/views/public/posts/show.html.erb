@@ -65,5 +65,14 @@
     <% if @post.user_id == current_user.id %>
       <%= link_to "編集する", edit_post_path(@post) %>
     <% end %>
+    
+    <% if @comments.exists? %>
+      <%= render 'public/comments/comment_form',commentable: @post  %>
+      <%= render 'public/comments/comments', comments: @comments %>
+    <% else %>
+      <p>まだコメントはありません</p>
+      <%= render 'public/comments/comment_form',commentable: @post  %>
+    <% end %>
   </div>
 </div>
+

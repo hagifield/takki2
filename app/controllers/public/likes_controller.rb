@@ -53,10 +53,10 @@ class Public::LikesController < ApplicationController
       title = likable.name
     elsif likable.is_a?(Post)
       recipient = likable.user
-      title = likable.text_content
+      title = likable.text_content.truncate(10)
     elsif likable.is_a?(Comment)
       recipient = likable.user
-      title = likable.content
+      title = likable.content.truncate(10)
     else
       return # `likable`が適切なクラスでない場合は通知を作成しない
     end

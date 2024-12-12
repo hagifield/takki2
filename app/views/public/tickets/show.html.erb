@@ -74,4 +74,12 @@
   </div>
 </div>
 
+<% if @comments.exists? %>
+  <%= render 'public/comments/comment_form', commentable: @ticket %>
+  <%= render 'public/comments/comments', comments: @comments %>
+<% else %>
+  <p>まだコメントはありません</p>
+  <%= render 'public/comments/comment_form', commentable: @ticket %>
+<% end %>
+
 <%= link_to "チケット一覧へ戻る", tickets_path, class: "btn btn-secondary mt-3" %>

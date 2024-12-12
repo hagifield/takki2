@@ -20,7 +20,7 @@
       <% end %>
     <% elsif comment.commentable.is_a?(Ticket) %>
       <% # チケットに対するコメントの場合 %>
-      <% if current_user.likes.exists?(likeable: comment) %>
+      <% if current_user.likes.exists?(likable: comment) %>
         <%= link_to 'いいねを取り消す', ticket_comment_like_path(comment.commentable, comment), method: :delete, class: 'btn btn-sm btn-danger' %>
       <% else %>
         <%= link_to 'いいね', ticket_comment_like_path(comment.commentable, comment), method: :post, class: 'btn btn-sm btn-primary' %>

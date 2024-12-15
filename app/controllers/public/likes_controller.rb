@@ -37,12 +37,18 @@ class Public::LikesController < ApplicationController
   private
 
   def set_likable
-    if params[:post_id]
+    if params[:comment_id]
+      # コメントが最優先
+      @likable = Comment.find(params[:comment_id])
+    elsif params[:post_id]
+      # 投稿が次に優先
       @likable = Post.find(params[:post_id])
     elsif params[:ticket_id]
+      # チケットが最後に優先
       @likable = Ticket.find(params[:ticket_id])
-    elsif params[:comment_id]
-      @likable = Comment.find(params[:comment_id])
+    else
+      # パラメータが不足している場合、エラーをスロー
+      raise ActiveRecord::RecordNotFound, "リソースが見つかりません"
     end
   end
 

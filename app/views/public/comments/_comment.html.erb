@@ -29,11 +29,13 @@
     
     <% if current_user == comment.user %>
       <% if comment.commentable.is_a?(Post) %>
-        <%= link_to '削除', post_comment_like_path(comment.commentable, comment), method: :delete, data: {confirm: "本当に削除しますか？"}, class: "btn btn-warning" %>
+        <%= link_to '削除', post_comment_path(comment.commentable, comment), method: :delete, data: {confirm: "本当に削除しますか？"}, class: "btn btn-warning" %>
       <% elsif comment.commentable.is_a?(Ticket) %>
-        <%= link_to '削除', ticket_comment_like_path(comment.commentable, comment), method: :delete, data:{confirm: "本当に削除しますか？"},class: "btn btn-warning" %>
+        <%= link_to '削除', ticket_comment_path(comment.commentable, comment), method: :delete, data:{confirm: "本当に削除しますか？"},class: "btn btn-warning" %>
       <% end %>
     <% end %>
+    
+    <p>♡<%= comment.likes.count %></p>
   </div>
 </div>
 <hr>

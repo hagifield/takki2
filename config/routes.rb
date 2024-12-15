@@ -37,7 +37,7 @@ Rails.application.routes.draw do
         get 'likes', to: 'posts#like_index'
       end
       resource :like, only: [:create, :destroy] # 投稿ごとのいいね
-      resources :comments, only: [:create, :destroy] do # ポストに対するコメント
+      resources :comments, only: [:create, :destroy] do # 投稿に対するコメント
         resource :like, only: [:create, :destroy] # 投稿のコメントに対するいいね
       end
     end

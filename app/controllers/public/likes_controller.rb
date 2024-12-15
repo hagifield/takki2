@@ -37,8 +37,19 @@ class Public::LikesController < ApplicationController
   private
 
   def set_likable
-    resource, id = request.path.split('/')[1, 2]
-    @likable = resource.singularize.classify.constantize.find(id)
+    if params[:comment_id]
+      # コメントが最優先
+      @likable = Comment.find(params[:comment_id])
+    elsif params[:post_id]
+      # 投稿が次に優先
+      @likable = Post.find(params[:post_id])
+    elsif params[:ticket_id]
+      # チケットが最後に優先
+      @likable = Ticket.find(params[:ticket_id])
+    else
+      # パラメータが不足している場合、エラーをスロー
+      raise ActiveRecord::RecordNotFound, "リソースが見つかりません"
+    end
   end
 
   # 通知を作成するメソッド
@@ -48,7 +59,10 @@ class Public::LikesController < ApplicationController
       title = likable.name
     elsif likable.is_a?(Post)
       recipient = likable.user
-      title = likable.text_content
+      title = likable.text_content.truncate(10)
+    elsif likable.is_a?(Comment)
+      recipient = likable.user
+      title = likable.content.truncate(10)
     else
       return # `likable`が適切なクラスでない場合は通知を作成しない
     end

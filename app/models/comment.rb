@@ -8,6 +8,9 @@ class Comment < ApplicationRecord
   # コメント可能なモデル（投稿、チケット）
   belongs_to :commentable, polymorphic: true
   
+  # いいね機能とのポリモーフィック関連付け
+  has_many :likes, as: :likable, dependent: :destroy
+  
   # 通知とのポリモーフィック関連付け
   has_many :notifications, as: :notifiable, dependent: :destroy
 end

@@ -35,6 +35,7 @@ class Public::TicketsController < ApplicationController
   def show
     # 個別チケットを表示
     @individual_tickets = @ticket.individual_tickets
+    @comments = @ticket.comments
   end
 
   # チケット編集画面

@@ -1,0 +1,41 @@
+<div class="comment">
+  <div class="comment-user">
+    <%= link_to comment.user.name, user_path(comment.user) %>
+    <% if comment.user.profile_image.attached? %>
+      <%= image_tag comment.user.profile_image,size: "50x50", alt: comment.user.name, class: "user-avatar" %>
+    <% else %>
+      <%= image_tag "no-image.jpeg", size: "50x50" %>
+    <% end %>
+  </div>
+  <div class="comment-content">
+    <p><%= comment.content %></p>
+  </div>
+  <div class="comment-actions">
+    <% if comment.commentable.is_a?(Post) %>
+      <% # 投稿に対するコメントの場合 %>
+      <% if current_user.likes.exists?(likable: comment) %>
+        <%= link_to 'いいねを取り消す', post_comment_like_path(comment.commentable, comment), method: :delete, class: 'btn btn-sm btn-danger' %>
+      <% else %>
+        <%= link_to 'いいね', post_comment_like_path(comment.commentable, comment), method: :post, class: 'btn btn-sm btn-primary' %>
+      <% end %>
+    <% elsif comment.commentable.is_a?(Ticket) %>
+      <% # チケットに対するコメントの場合 %>
+      <% if current_user.likes.exists?(likable: comment) %>
+        <%= link_to 'いいねを取り消す', ticket_comment_like_path(comment.commentable, comment), method: :delete, class: 'btn btn-sm btn-danger' %>
+      <% else %>
+        <%= link_to 'いいね', ticket_comment_like_path(comment.commentable, comment), method: :post, class: 'btn btn-sm btn-primary' %>
+      <% end %>
+    <% end %>
+    
+    <% if current_user == comment.user %>
+      <% if comment.commentable.is_a?(Post) %>
+        <%= link_to '削除', post_comment_path(comment.commentable, comment), method: :delete, data: {confirm: "本当に削除しますか？"}, class: "btn btn-warning" %>
+      <% elsif comment.commentable.is_a?(Ticket) %>
+        <%= link_to '削除', ticket_comment_path(comment.commentable, comment), method: :delete, data:{confirm: "本当に削除しますか？"},class: "btn btn-warning" %>
+      <% end %>
+    <% end %>
+    
+    <p>♡<%= comment.likes.count %></p>
+  </div>
+</div>
+<hr>

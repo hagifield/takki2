@@ -22,6 +22,7 @@ class Public::PostsController < ApplicationController
   end
 
   def show
+    @comments = @post.comments
   end
 
   def index

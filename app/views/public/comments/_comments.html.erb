@@ -1,0 +1,6 @@
+<div class="comments">
+  <h3>コメント一覧 (<%= comments.count %>)件</h3>
+  <% comments.each do |comment| %>
+    <%= render 'public/comments/comment', comment: comment %>
+  <% end %>
+</div>

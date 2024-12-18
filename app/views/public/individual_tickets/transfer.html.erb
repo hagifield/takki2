@@ -1,2 +1,35 @@
-<h1>IndividualTickets#transfer</h1>
-<p>Find me in app/views/individual_tickets/transfer.html.erb</p>
+<h1>チケットを渡すユーザーを選択</h1>
+
+<h2>渡すチケット</h2>
+<h4>チケット名：<%= @ticket.name %></h4>
+<h4>チケット発行者：<%= @ticket.issuer.name %></h4>
+<% if @ticket.description.present? %>
+ <p><strong>説明：</strong><%= @ticket.description %></p>
+<% else %>
+ <p><strong>説明：</strong>記載なし</p>
+<% end %>
+
+<p><strong>有効期限：</strong>
+ <%= @ticket.expiration_date ? @ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+</p>
+<p><strong>残り枚数：</strong><%= @ticket.remaining_tickets %></p>
+
+<h2>フォローしたユーザーから選択</h2>
+
+<div class="user-list">
+  <% @followed_users.each do |user| %>
+    <div class="user-item">
+      <% if user.profile_image.attached? %>
+       <%= image_tag user.profile_image, size: "50x50", class: "rounded-circle" %>
+      <% else %>
+       <%= image_tag "no-image.jpeg", size: "50x50" %>
+      <% end %>
+      <p><%= user.name %></p>
+      <%= 
+       button_to "このユーザーに渡す", 
+       transferred_individual_ticket_path(@individual_ticket, new_owner_id: user.id), 
+       method: :patch,data: {confirm: "本当に#{user.name}さんにチケットを渡しますか？"},  class: "btn btn-primary" 
+      %>
+    </div>
+  <% end %>
+</div>

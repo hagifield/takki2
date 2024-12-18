@@ -33,6 +33,13 @@ class Public::TicketsController < ApplicationController
 
   # チケットの詳細
   def show
+    # @ticketはset_ticketメソッドで取得
+    #チケットがプライベートの際の条件分岐（権限があればreturnで@ticketが有効になる）
+    unless !@ticket.private? || @ticket.issuer == current_user || @ticket.individual_tickets.exists?(owner_id: current_user.id)
+      redirect_to tickets_path, alert: "このチケットにアクセスする権限がありません"
+      return
+    end
+    
     # 個別チケットを表示
     @individual_tickets = @ticket.individual_tickets
     @comments = @ticket.comments

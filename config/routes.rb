@@ -47,9 +47,6 @@ Rails.application.routes.draw do
     get 'tickets/issued_tickets/:user_id', to: 'tickets#issued_tickets', as: 'user_issued_tickets' # ユーザーの発行したチケット一覧。パスの最後はユーザーIDを受け取る。
     get 'tickets/:id/individual_tickets', to: 'tickets#individual_tickets', as: 'issued_individual_tickets'# ユーザーの発行したチケットの個別チケット一覧。
     resources :tickets do
-      member do
-        get 'transfer'
-      end
       resource :like, only: [:create, :destroy] # チケットごとのいいね
       resources :comments, only: [:create, :destroy] do # チケットに対するコメント
         resource :like, only: [:create, :destroy] # チケットのコメントに対するいいね
@@ -63,7 +60,8 @@ Rails.application.routes.draw do
       end
       
       member do
-        patch :transfer # チケット譲渡用
+        get :transfer # チケット譲渡用（ビュー表示）
+        patch :transferred # チケット譲渡用（更新）
         patch :mark_as_used # チケットを使用済みにする
       end
     end

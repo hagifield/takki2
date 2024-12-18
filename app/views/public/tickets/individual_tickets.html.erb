@@ -8,6 +8,7 @@
       <th>所有者</th>
       <th>使用リクエスト状態</th>
       <th>操作</th>
+      <th>譲渡</th>
     </tr>
   </thead>
   <tbody>
@@ -30,6 +31,11 @@
         <% else %>
           <td>リクエストなし</td>
           <td>-</td>
+        <% end %>
+        <% if individual_ticket.owner.present? %>
+          <td>-</td>
+        <% else %>
+          <td><%= link_to "渡すユーザーを選ぶ", transfer_individual_ticket_path(individual_ticket), class: "btn btn-primary" %></td>
         <% end %>
       </tr>
     <% end %>

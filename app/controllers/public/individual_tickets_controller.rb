@@ -1,5 +1,5 @@
 class Public::IndividualTicketsController < ApplicationController
-  before_action :set_individual_ticket, only: [:show, :update, :mark_as_used, :transfer]
+  before_action :set_individual_ticket, only: [:show, :update, :mark_as_used, :transfer, :transferred]
 
   def index
     @individual_tickets = current_user.owned_individual_tickets
@@ -49,11 +49,23 @@ class Public::IndividualTicketsController < ApplicationController
   end
 
   def transfer
-    new_owner = User.find(params[:new_owner_id])
-    if @individual_ticket.update(owner: new_owner)
-      redirect_to individual_ticket_path(@individual_ticket), notice: "チケットを譲渡しました。"
+    @ticket = @individual_ticket.ticket
+    @followed_users = current_user.followings
+    
+    
+  end
+  
+  def transferred
+    new_owner = User.find_by(id: params[:new_owner_id])
+    
+    if (@individual_ticket.ticket.issuer == current_user || @individual_ticket.owner == current_user) && new_owner
+      @individual_ticket.update!(owner: new_owner)
+      redirect_to issued_individual_tickets_path(@individual_ticket.ticket_id), notice: "#{new_owner.name}さんへチケットを譲渡しました"
     else
-      redirect_to individual_ticket_path(@individual_ticket), alert: "チケットの譲渡に失敗しました。"
+      flash.now[:alert] = "チケットの譲渡に失敗しました。譲渡先が見つかりません。"
+      @ticket = @individual_ticket.ticket
+      @followed_users = current_user.followings
+      render :transfer, status: :unprocessable_entity
     end
   end
 

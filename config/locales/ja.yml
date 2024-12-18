@@ -7,6 +7,7 @@ ja:
       follow: "フォロー"
       like: "いいね"
       comment: "コメント"
+      transfer: "チケットプレゼント"
   enums:
     request:
       status:

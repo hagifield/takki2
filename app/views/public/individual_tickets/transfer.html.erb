@@ -28,7 +28,9 @@
       <%= 
        button_to "このユーザーに渡す", 
        transferred_individual_ticket_path(@individual_ticket, new_owner_id: user.id), 
-       method: :patch,data: {confirm: "本当に#{user.name}さんにチケットを渡しますか？"},  class: "btn btn-primary" 
+       method: :patch,
+       data: {confirm: "本当に#{user.name}さんにチケットを渡しますか？"},  
+       class: "btn btn-primary" 
       %>
     </div>
   <% end %>

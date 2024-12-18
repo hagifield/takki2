@@ -60,6 +60,11 @@ class Public::IndividualTicketsController < ApplicationController
     
     if (@individual_ticket.ticket.issuer == current_user || @individual_ticket.owner == current_user) && new_owner
       @individual_ticket.update!(owner: new_owner)
+      new_owner.notifications.create!(
+        message: "#{current_user.name}さんがあなたにチケットを渡しました！",
+        notifiable: @individual_ticket,
+        action_type: "transfer"
+        )
       redirect_to issued_individual_tickets_path(@individual_ticket.ticket_id), notice: "#{new_owner.name}さんへチケットを譲渡しました"
     else
       flash.now[:alert] = "チケットの譲渡に失敗しました。譲渡先が見つかりません。"
@@ -78,4 +83,6 @@ class Public::IndividualTicketsController < ApplicationController
   def individual_ticket_params
     params.require(:individual_ticket).permit(:status, :owner_id)
   end
+  
+  
 end

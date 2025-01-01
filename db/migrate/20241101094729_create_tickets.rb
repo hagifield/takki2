@@ -9,7 +9,7 @@ class CreateTickets < ActiveRecord::Migration[6.1]
       t.date :expiration_date
       t.integer :quantity, null: false
       t.integer :status, null: false, default: 0
-      t.boolean :private, null: false, default: false
+      t.boolean :private, null: false, default: true
       t.timestamps
     end
   end

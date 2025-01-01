@@ -25,12 +25,37 @@
     <%= f.label :quantity, "枚数", class: "form-label" %>
     <%= f.number_field :quantity, value: 1, min: 1, class: "form-control", required: true %>
   </div>
-
-  <!-- 渡すユーザー -->
+  
+  <!-- プライベートチケットにするかどうか -->
   <div class="form-group">
-    <%= f.label :recipient_id, "直接渡すユーザー (任意)", class: "form-label" %>
-    <%= f.collection_select :recipient_id, @followed_users, :id, :name, { include_blank: "選択しない" }, class: "form-control" %>
-    <small class="form-text text-muted">フォローしているユーザーから選択できます</small>
+    <p>このチケットの公開設定</p>
+    
+    <div class="btn-group" role="group" data-toggle="buttons">
+      <!-- 非公開 -->
+      <label class="btn btn-outline-warning active">
+        <%= f.radio_button :private, true, {class:"d-none btn-check", checked: true} %>非公開
+      </label>
+      <!--公開-->
+      <label class="btn btn-outline-success">
+        <%= f.radio_button :private, false, {class:"d-none btn-check"} %>公開
+      </label>
+    </div>
+  </div>
+
+  <!-- 誰かに渡す意思があるかどうか -->
+  <div class="form-group">
+    <p>作成したチケットを渡す人を選ぶ（次画面）</p>
+    <div class="btn-group" role="group" data-toggle="buttons">
+      <!-- 渡す意思あり -->
+      <label class="btn btn-outline-primary active">
+        <%= f.radio_button :transfer, true, {class:"d-none btn-check", checked: true} %>YES（誰かに渡す）
+      </label>
+      <!--まだ渡さない-->
+      <label class="btn btn-outline-secondary">
+        <%= f.radio_button :transfer, false, {class:"d-none btn-check"} %>NO（後から決める）
+      </label>
+    </div>
+
   </div>
 
   <!-- 提出ボタン -->

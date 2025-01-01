@@ -138,7 +138,7 @@ ActiveRecord::Schema.define(version: 2024_11_25_151941) do
     t.date "expiration_date"
     t.integer "quantity", null: false
     t.integer "status", default: 0, null: false
-    t.boolean "private", default: false, null: false
+    t.boolean "private", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

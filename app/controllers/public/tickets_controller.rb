@@ -12,12 +12,18 @@ class Public::TicketsController < ApplicationController
   # チケットの作成処理
   def create
     @ticket = current_user.issued_tickets.build(ticket_params)
-    # 渡すユーザーが指定されている場合はプライベートチケットに設定
-    @ticket.private = params[:ticket][:recipient_id].present?
+    
 
     if @ticket.save
-      create_individual_tickets(@ticket) # 個別チケットを生成
-      redirect_to tickets_path, notice: "チケットを作成しました。"
+      
+      create_individual_tickets(@ticket)
+      
+      # 「誰かに渡す意思」がある場合は個別チケット一覧ページへリダイレクト
+      if params[:ticket][:transfer] == "true" # チェックボックスがオンの場合
+        redirect_to issued_individual_tickets_path(@ticket), notice: "チケットを作成しました。チケットを渡す人を選びましょう！。"
+      else
+        redirect_to tickets_path, notice: "チケットを作成しました。"
+      end
     else
       @followed_users = current_user.followings # エラー時の再表示用
       flash.now[:alert] = "チケットの作成に失敗しました。"

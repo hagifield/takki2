@@ -1,56 +1,127 @@
-<h1>チケット一覧</h1>
+<div class="row">
+  <h1 class="col-md-4">チケット一覧</h1>
+  <h5 class="col-md-4 offset-md-4">チケットを検索</h5>
+  <%= search_form_for @q, url: tickets_path, method: :get, class: "col-md-4 offset-md-8 mb-3" do |f| %>
+    <%= f.text_field :name_or_description_cont, placeholder: "チケットを検索" %>
+    <%= f.submit "検索", class: "btn btn-primary" %>
+  <% end %>
+</div>
 
-<% if @tickets.any? %>
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <% @tickets.each do |ticket| %>
-      <div class="col">
-        <div class="card h-100">
-          <!-- カードヘッダー -->
-          <div class="card-header">
-            <h5 class="card-title">
-              チケット名:<%= ticket.name %></br>
-              発行者：<%= ticket.issuer.name %>
-            </h5>
-          </div>
+<!-- チケット検索結果 -->
+<% if params[:q].present? %>
+  <% if @searched_ticket.any? %>
+    <strong><h3>チケット検索結果</h3></strong>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% @searched_ticket.each do |ticket| %>
+        <div class="col my-3">
+          <div class="card h-100">
+            <!-- カードヘッダー -->
+            <div class="card-header">
+              <h5 class="card-title">
+                チケット名:<%= ticket.name %><br>
+                発行者：<%= ticket.issuer.name %>
+              </h5>
+            </div>
 
-          <!-- カードボディ -->
-          <div class="card-body">
-            <strong>チケットの説明：</strong>
-            <!-- 説明 -->
-            <% if ticket.description.present? %>
-              <p class="card-text"><%= truncate(ticket.description, length: 100) %></p>
+            <!-- カードボディ -->
+            <div class="card-body">
+              <strong>チケットの説明：</strong>
+              <% if ticket.description.present? %>
+                <p class="card-text"><%= truncate(ticket.description, length: 100) %></p>
+              <% else %>
+                <p class="card-text text-muted">説明なし</p>
+              <% end %>
+
+              <!-- 有効期限 -->
+              <p class="card-text">
+                <strong>有効期限:</strong>
+                <%= ticket.expiration_date ? ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+              </p>
+
+              <!-- 残り枚数 -->
+              <p class="card-text">
+                <strong>残り枚数：</strong>
+                <%= ticket.remaining_tickets %>/<%= ticket.quantity %>
+              </p>
+            </div>
+
+            <!-- カードフッター -->
+            <div class="card-footer text-center">
+              <%= link_to "詳細を見る", ticket_path(ticket), class: "btn btn-primary" %>
+            </div>
+
+            <% if ticket.likes.exists?(user: current_user) %>
+              <%= button_to 'いいね解除', ticket_like_path(ticket), method: :delete, class: 'btn btn-danger' %>
             <% else %>
-              <p class="card-text text-muted">説明なし</p>
+              <%= button_to 'いいね', ticket_like_path(ticket), method: :post, class: 'btn btn-primary' %>
             <% end %>
-
-            <!-- 有効期限 -->
-            <p class="card-text">
-              <strong>有効期限:</strong>
-              <%= ticket.expiration_date ? ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
-            </p>
-
-            <!-- 残り枚数 -->
-            <p class="card-text">
-              <strong>残り枚数：</strong>
-              <%= ticket.remaining_tickets %>/<%= ticket.quantity %>
-            </p>
+            <p>♡<%= ticket.likes.count %></p>
           </div>
-
-          <!-- カードフッター -->
-          <div class="card-footer text-center">
-            <%= link_to "詳細を見る", ticket_path(ticket), class: "btn btn-primary" %>
-          </div>
-          
-          <% if ticket.likes.exists?(user: current_user) %>
-            <%= button_to 'いいね解除', ticket_like_path(ticket), method: :delete, class: 'btn btn-danger' %>
-          <% else %>
-            <%= button_to 'いいね', ticket_like_path(ticket), method: :post, class: 'btn btn-primary' %>
-          <% end %>
-          <p>♡<%= ticket.likes.count %></p>
         </div>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>該当するチケットはありません</p>
+  <% end %>
 <% else %>
-  <p>現在、公開されているチケットはありません。</p>
+  <!-- 検索していない場合は何も表示しない -->
+<% end %>
+
+<% if params[:q].present? %>
+  <!-- 検索した時は表示しない -->
+<% else %>
+  <% if @tickets.any? %>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% @tickets.each do |ticket| %>
+        <div class="col my-3">
+          <div class="card h-100">
+            <!-- カードヘッダー -->
+            <div class="card-header">
+              <h5 class="card-title">
+                チケット名:<%= ticket.name %></br>
+                発行者：<%= ticket.issuer.name %>
+              </h5>
+            </div>
+  
+            <!-- カードボディ -->
+            <div class="card-body">
+              <strong>チケットの説明：</strong>
+              <!-- 説明 -->
+              <% if ticket.description.present? %>
+                <p class="card-text"><%= truncate(ticket.description, length: 100) %></p>
+              <% else %>
+                <p class="card-text text-muted">説明なし</p>
+              <% end %>
+  
+              <!-- 有効期限 -->
+              <p class="card-text">
+                <strong>有効期限:</strong>
+                <%= ticket.expiration_date ? ticket.expiration_date.strftime("%Y/%m/%d") : "なし" %>
+              </p>
+  
+              <!-- 残り枚数 -->
+              <p class="card-text">
+                <strong>残り枚数：</strong>
+                <%= ticket.remaining_tickets %>/<%= ticket.quantity %>
+              </p>
+            </div>
+  
+            <!-- カードフッター -->
+            <div class="card-footer text-center">
+              <%= link_to "詳細を見る", ticket_path(ticket), class: "btn btn-primary" %>
+            </div>
+            
+            <% if ticket.likes.exists?(user: current_user) %>
+              <%= button_to 'いいね解除', ticket_like_path(ticket), method: :delete, class: 'btn btn-danger' %>
+            <% else %>
+              <%= button_to 'いいね', ticket_like_path(ticket), method: :post, class: 'btn btn-primary' %>
+            <% end %>
+            <p>♡<%= ticket.likes.count %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>現在、公開されているチケットはありません。</p>
+  <% end %>
 <% end %>

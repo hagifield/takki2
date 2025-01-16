@@ -52,7 +52,16 @@ class Public::IndividualTicketsController < ApplicationController
     @ticket = @individual_ticket.ticket
     @followed_users = current_user.followings
     
+    #ransack検索オブジェクト
+    @q = User.ransack(params[:q])
     
+    if params[:q].present?
+      @serched_users = @q.result(distinct: true).where.not(id: current_user.id)
+      #他テーブルとの結合があり、重複する場合はdistinct: trueを設定する。今回は必要ないが一応
+      #また、where.not以降で自分自身が検索結果に引っかからないように設定
+    else
+      @serched_users = [] #検索していない時は空の情報を代入
+    end
   end
   
   def transferred
@@ -70,6 +79,8 @@ class Public::IndividualTicketsController < ApplicationController
       flash.now[:alert] = "チケットの譲渡に失敗しました。譲渡先が見つかりません。"
       @ticket = @individual_ticket.ticket
       @followed_users = current_user.followings
+      @q = User.ransack(params[:q])
+      @serced_users = @q.result(distinct: true)
       render :transfer, status: :unprocessable_entity
     end
   end

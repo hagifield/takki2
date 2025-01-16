@@ -84,4 +84,10 @@ class User < ApplicationRecord
   def password_required?
     new_record? || password.present?
   end
+  
+   # Ransackで検索可能な属性を指定
+  def self.ransackable_attributes(auth_object = nil)
+    ["id", "name", "email", "created_at", "updated_at"]
+  end
+  
 end

@@ -22,7 +22,7 @@
       <% if user.profile_image.attached? %>
        <%= image_tag user.profile_image, size: "50x50", class: "rounded-circle" %>
       <% else %>
-       <%= image_tag "no-image.jpeg", size: "50x50" %>
+       <%= image_tag "no-image.jpeg", size: "50x50", class: "rounded-circle" %>
       <% end %>
       <p><%= user.name %></p>
       <%= 
@@ -34,4 +34,37 @@
       %>
     </div>
   <% end %>
+</div>
+
+<h2>検索してユーザーを探す</h2>
+<!-- ransack検索フォーム -->
+<%= search_form_for @q, url: transfer_individual_ticket_path(@individual_ticket), method: :get do |f| %>
+ <div>
+  <%= f.label :name_cont, "名前で検索" %>
+  <%= f.text_field :name_cont, placeholder: "ユーザー名を入力" %>
+  <%= f.submit "検索", class: "btn btn-primary" %>
+ </div>
+<% end %>
+
+<!-- ユーザー検索結果をeach文で表示 -->
+<div class="user-list">
+ <% @serched_users.each do |user| %>
+  <div class="user-item">
+   <% if user.profile_image.attached? %>
+    <%= image_tag user.profile_image, size: "50x50", class: "rounded-circle" %>
+   <% else %>
+    <%= image_tag "no-image.jpeg", size: "50x50", class: "rounded-circle" %>
+   <% end %>
+   
+   <p><%= user.name %></p>
+   
+   <%=
+    button_to "このユーザーに渡す",
+    transferred_individual_ticket_path(@individual_ticket, new_owner_id: user.id),
+    method: :patch,
+    data: {confirm: "本当に#{user.name}さんにチケットを渡しますか？"},
+    class: "btn btn-primary"
+   %>
+  </div>
+ <% end %>
 </div>

@@ -41,4 +41,14 @@ class Ticket < ApplicationRecord
   def set_default_status
     self.status ||= :active # デフォルトで「active」に設定
   end
+  
+    # Ransackで検索可能な属性を指定
+  def self.ransackable_attributes(auth_object = nil)
+    ["id", "name", "description", "created_at", "updated_at"]
+  end
+  
+  # Ransackで検索可能な関連付けを指定
+  def self.ransackable_associations(auth_object = nil)
+    ["issuer", "likes", "comments", "individual_tickets", "recipient"]
+  end
 end

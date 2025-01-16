@@ -35,6 +35,16 @@ class Public::TicketsController < ApplicationController
   def index
     # 公開されているチケットを取得
     @tickets = Ticket.where(private: false).order(created_at: :desc)
+    
+    @q = Ticket.where(private: false).ransack(params[:q])
+    
+    if params[:q].present?
+      @searched_ticket = @q.result(distinct: true).order(created_at: :desc)
+      #distinct: trueでテーブル結合による重複を回避
+    else
+      @searched_ticket = []#検索していない時は空の情報を代入
+    end
+    
   end
 
   # チケットの詳細
